@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack --config tools/webpack.config.js",
-    "dev": "nodemon --watch dist --delay 2.5 server.js",
-    "start": "run-p build dev",
+    "app:build": "npm run build -- --mode production",
+    "dev:build": "npm run build -- --mode development",
+    "dev:server": "nodemon --watch dist --watch server.js --delay 2.5 server.js",
+    "start": "run-p dev:*",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -26,7 +28,9 @@
   },
   "homepage": "https://github.com/nishantsinha-5/node-rest-api#readme",
   "dependencies": {
-    "express": "^4.16.3"
+    "chalk": "2.4.1",
+    "errorhandler": "1.5.0",
+    "express": "4.16.3"
   },
   "devDependencies": {
     "babel-core": "6.26.3",
