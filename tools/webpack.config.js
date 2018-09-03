@@ -1,17 +1,17 @@
-var path = require("path");
-const nodeExternals = require("webpack-node-externals");
+var path = require('path');
+const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
-	mode: "development",
-	target: "node",
-	devtool: "source-map",
+	target: 'node',
+	devtool: 'source-map',
+	watch: true,
 	externals: [nodeExternals()],
-	entry: path.join(process.cwd(), "src/index.js"),
+	entry: path.join(process.cwd(), 'src/index.js'),
 	output: {
-		path: path.join(process.cwd(), "dist"),
-		filename: "index.js",
-		library: "node-rest-api",
-		libraryTarget: "umd",
+		path: path.join(process.cwd(), 'dist'),
+		filename: 'index.js',
+		library: 'node-rest-api',
+		libraryTarget: 'umd',
 		umdNamedDefine: true
 	},
 	module: {
@@ -19,11 +19,11 @@ module.exports = {
 			{
 				test: /\.js$/,
 				exclude: /node_modules/,
-				loader: "babel-loader"
+				loader: 'babel-loader'
 			},
 			{
 				test: /\.js$/,
-				loader: "eslint-loader",
+				loader: 'eslint-loader',
 				exclude: /node_modules/
 			}
 		]
