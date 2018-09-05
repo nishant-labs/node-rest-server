@@ -6,7 +6,7 @@ const testData = {
 	'/test/data/name': {
 		method: 'POST',
 		status: 200,
-		payload: requestData => {
+		controller: requestData => {
 			const { gender, name } = requestData.body;
 			return {
 				status: 200,
@@ -20,13 +20,13 @@ const testData = {
 	'/test/data/address': {
 		method: 'POST',
 		status: 200,
-		payload: requestData => {
+		controller: requestData => {
 			return { payload: { place: 'The World' }, requestData };
 		}
 	},
 	'/data/name/:id': {
 		method: 'POST',
-		payload: requestData => {
+		controller: requestData => {
 			return {
 				status: 500,
 				payload: { requestData: JSON.stringify(requestData) }
@@ -37,13 +37,13 @@ const testData = {
 
 const serverConfigs = {
 	basePath: '/v2/api',
-	port: 8000,
+	port: 8080,
 	delay: 2
 };
 
 const Start = () => {
-	const Server = require('./dist').default;
-	Server(testData, serverConfigs);
+	const RestServer = require('./dist').default;
+	RestServer(testData, serverConfigs);
 };
 
 function getFile(file, timeout) {

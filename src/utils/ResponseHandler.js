@@ -1,7 +1,7 @@
 export default class ResponseHandler {
-	static getResponseData(requestProcessor, options, responseData) {
+	static getResponseData(routeConfig, options, responseData = {}) {
 		return {
-			status: responseData.status || requestProcessor.status || 200,
+			status: responseData.status || routeConfig.status || 200,
 			data: responseData.payload || responseData
 		};
 	}
