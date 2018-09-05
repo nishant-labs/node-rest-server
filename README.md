@@ -34,9 +34,9 @@ The configuration is an object with 2 properties:-
 ### Route Options
 
 | Name | Type | Default | Description |
-|:---:|:---:|:---:|:---:|
+|:---:|:---:|:---:|:---|
 | method | `{string}` | `GET` | Method defines the type of request controller will handle |
-| controller | `{function | object}` |  | This function/object will contain the business logic for the route path. For function an object is passed which will contain `url`, `body`, `params` and `header`. |
+| controller | `{function\|object}` |  | This function/object will contain the business logic for the route path. For function an object is passed which will contain `url`, `body`, `params` and `header`. |
 | status (_optional_) | `{string}` | `200` | An appropriate HTTP response status code which server will give response for a request |
 
 ### Example
@@ -64,7 +64,7 @@ const routeConfig = {
 This manages how server will be configured
 
 | Name | Type | Default | Description |
-|:---:|:---:|:---:|:---:|
+|:---:|:---:|:---:|:---|
 | basePath | `{string}` |  | Common prefix for all the routes |
 | port | `{Number}` | `8000` | Port on which server will serve the content |
 | delay (sec) | `{Number}` | `0` | Forcefully delay the response timing in seconds |
