@@ -1,9 +1,14 @@
 import RequestHandler from '../utils/RequestHandler';
 import ResponseHandler from '../utils/ResponseHandler';
 
-export default (requestProcessor, options) => (request, response) => {
-	const responseData = requestProcessor.payload(RequestHandler.getRequestDataForPayload(request));
-	const { status, data } = ResponseHandler.getResponseData(requestProcessor, options, responseData);
+export default (routeConfig, options) => (request, response) => {
+	let responseData;
+	if (typeof routeConfig.controller === 'function') {
+		responseData = routeConfig.controller(RequestHandler.getRequestDataForPayload(request));	
+	} else if (typeof routeConfig.controller === 'object') {
+		responseData = routeConfig.controller;
+	}
+	const { status, data } = ResponseHandler.getResponseData(routeConfig, options, responseData);
 	if (options.delay > 0) {
 		setTimeout(() => {
 			response.status(status).json(data);

@@ -1,33 +1,40 @@
 import express from 'express';
 import { RouteProvider } from './providers';
-
+import Printer from './utils/Printer';
 const errorHandler = require('errorhandler');
 
-export default (path, options = {}) => {
-	const app = express();
+export default (routeConfig, serverConfig = {}) => {
+	try {
+		const app = express();
 
-	app.set('port', options.port);
+		app.set('port', serverConfig.port || 8000);
 
-	app.use(express.json());
-	app.use(express.urlencoded({ extended: true }));
+		app.use(express.json());
+		app.use(express.urlencoded({ extended: true }));
 
-	app.get('/status', (request, response) => {
-		response.send(app._router.stack);
-	});
+		app.get('/status', (request, response) => {
+			response.send(app._router.stack);
+		});
 
-	Object.keys(path).forEach((value) => {
-		const data = path[value];
-		const uri = `${options.basePath}${value}`;
-		if (typeof data.method === 'string') {
-			app[String(data.method).toLowerCase()](uri, RouteProvider(data, options));
+		Object.keys(routeConfig).forEach(value => {
+			const data = routeConfig[value];
+			const uri = `${serverConfig.basePath || ''}${value}`;
+			if (typeof data.method === 'string') {
+				app[String(data.method).toLowerCase()](
+					uri,
+					RouteProvider(data, serverConfig)
+				);
+			}
+		});
+
+		if (app.get('env') === 'development') {
+			app.use(errorHandler());
 		}
-		
-	});
-	
-	if (app.get('env') === 'development') {
-		app.use(errorHandler());
+
+		app.listen(app.get('port'), () =>
+			Printer.yellow('Rest Server Listening on port', app.get('port'))
+		);
+	} catch (error) {
+		Printer.red(error);
 	}
-	
-	
-	app.listen(app.get('port'), () => console.log('Example app listening on port', app.get('port'))); // eslint-disable-line
 };
