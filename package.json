@@ -2,11 +2,11 @@
   "name": "node-rest-server",
   "version": "0.0.1",
   "description": "Configurable node rest server",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "build": "webpack --config configuration/webpack.config.js",
     "app:build": "npm run build -- --mode production",
-    "dev:build": "npm run build -- --mode development",
+    "dev:build": "npm run build -- --mode development --watch",
     "dev:server": "nodemon --watch dist --watch server.js --delay 2.5 server.js",
     "start": "run-p dev:*"
   },
@@ -14,6 +14,9 @@
     "type": "git",
     "url": "git@github.com:nishant-labs/node-rest-server.git"
   },
+  "files": [
+    "lib"
+  ],
   "keywords": [
     "node rest",
     "rest-server",

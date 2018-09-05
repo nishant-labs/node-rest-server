@@ -3,16 +3,13 @@ const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
 	target: 'node',
-	devtool: 'source-map',
-	watch: true,
 	externals: [nodeExternals()],
 	entry: path.join(process.cwd(), 'src/index.js'),
 	output: {
-		path: path.join(process.cwd(), 'dist'),
+		path: path.join(process.cwd(), 'lib'),
 		filename: 'index.js',
 		library: 'node-rest-api',
-		libraryTarget: 'umd',
-		umdNamedDefine: true
+		libraryTarget: 'commonjs2',
 	},
 	module: {
 		rules: [

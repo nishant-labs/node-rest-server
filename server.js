@@ -42,7 +42,7 @@ const serverConfigs = {
 };
 
 const Start = () => {
-	const RestServer = require('./dist').default;
+	const RestServer = require('./lib').default;
 	RestServer(testData, serverConfigs);
 };
 
@@ -60,4 +60,4 @@ function getFile(file, timeout) {
 		}, timeout);
 	}
 }
-getFile('./dist', 1000);
+getFile('./lib', 1000);
