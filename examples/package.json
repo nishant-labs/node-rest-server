@@ -1,0 +1,14 @@
+{
+  "name": "examples",
+  "version": "1.0.0",
+  "description": "node-rest-server examples",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Nishant Kumar Sinha",
+  "license": "ISC",
+  "dependencies": {
+    "node-rest-server": "^1.0.0"
+  }
+}
