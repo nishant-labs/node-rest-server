@@ -1,4 +1,4 @@
-# node-rest-api
+# node-rest-server
 
 Configuration only node rest server
 
@@ -36,21 +36,36 @@ The configuration is an object with 2 properties:-
 | Name | Type | Default | Description |
 |:---:|:---:|:---:|:---|
 | method | `{string}` | `GET` | Method defines the type of request controller will handle |
-| controller | `{function\|object}` |  | This function/object will contain the business logic for the route path. For function an object is passed which will contain `url`, `body`, `params` and `header`. |
+| controller | `{function\|object}` |  | This function/object will contain the business logic for the route path. For function an object is passed which will contain request `url`, `body`, `params` and `header` to be used. |
 | status (_optional_) | `{string}` | `200` | An appropriate HTTP response status code which server will give response for a request |
+
+### Controller method
+
+A controller can either
+
+- return an object with `status` and `payload`;
+
+```js
+{
+  status: 500, // should be a number
+  payload: "Hello world" // user can send any valid json converted using JSON.stringify()
+}
+```
+
+or
+
+- return a response data object (valid as per `JSON.stringify()` json spec)
 
 ### Example
 
 ```js
 const routeConfig = {
-  '/test1': {
+  '/endpoint1': {
     method: 'GET',
     status: 200,
-    controller: requestData => {
-      return { payload: 'Data' };
-    },
+    controller: () => 'Data',
   },
-  '/test2': {
+  '/endpoint2': {
     method: 'POST',
     controller: requestData => {
       return { status: 200, payload: { data: 'Data' }};

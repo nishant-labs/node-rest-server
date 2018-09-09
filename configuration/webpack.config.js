@@ -8,7 +8,7 @@ module.exports = {
 	output: {
 		path: path.join(process.cwd(), 'lib'),
 		filename: 'index.js',
-		library: 'node-rest-api',
+		library: 'node-rest-server',
 		libraryTarget: 'commonjs2',
 	},
 	module: {
