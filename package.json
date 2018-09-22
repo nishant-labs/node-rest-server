@@ -4,9 +4,8 @@
   "description": "Configurable node rest server",
   "main": "lib/index.js",
   "scripts": {
-    "build": "webpack --config configuration/webpack.config.js",
-    "app:build": "npm run build -- --mode production",
-    "dev:build": "npm run build -- --mode development --devtool source-map --watch",
+    "prod:build": "webpack --config configuration/webpack.prod.js",
+    "dev:build": "webpack --config configuration/webpack.dev.js",
     "dev:server": "nodemon --watch lib --watch server.js --delay 2.5 server.js",
     "start": "run-p dev:*"
   },
@@ -46,6 +45,7 @@
     "source-map-support": "0.5.9",
     "webpack": "4.17.1",
     "webpack-cli": "3.1.0",
+    "webpack-merge": "4.1.4",
     "webpack-node-externals": "1.7.2"
   }
 }
