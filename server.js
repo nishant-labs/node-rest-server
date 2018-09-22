@@ -42,11 +42,18 @@ const serverConfigs = {
 	logger: {
 		debug: false,
 		enable: true,
-	}
+	},
+	filter: (requestData) => {
+		let isChecked = false;
+		if (requestData.body.name === 'test') {
+			isChecked = false;
+		}
+		return { data: 'data calculated for each request', isChecked };
+	},
 };
 
 const Start = () => {
-	const RestServer = require('./lib').default;
+	const RestServer = require('./dist').default;
 	RestServer(testData, serverConfigs);
 };
 
@@ -64,4 +71,4 @@ function getFile(file, timeout) {
 		}, timeout);
 	}
 }
-getFile('./lib', 1000);
+getFile('./dist', 1000);

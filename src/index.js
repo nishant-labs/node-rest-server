@@ -1,8 +1,8 @@
 import express from 'express';
+const errorHandler = require('errorhandler');
 import { RouteProvider } from './providers';
 import { initializeLogger, logger } from './utils/Logger';
 import RequestHandler from './utils/RequestHandler';
-const errorHandler = require('errorhandler');
 
 export default (routeConfig, serverConfig = {}) => {
 	const app = express();
@@ -13,11 +13,15 @@ export default (routeConfig, serverConfig = {}) => {
 		app.use(express.json());
 		app.use(express.urlencoded({ extended: true }));
 
-		app.use('*', (request, response, next) => {
+		app.use((request, response, next) => {
 			const data = RequestHandler.getRequestData(request);
 			logger.info('Request URL : ', JSON.stringify(data.url));
 			logger.info('Request headers : ', JSON.stringify(data.headers));
 			logger.info('Request body : ', JSON.stringify(data.body));
+			if (typeof serverConfig.filter === 'function') {
+				const localData = serverConfig.filter(data);
+				response.locals = localData;
+			}
 			next();
 		});
 
