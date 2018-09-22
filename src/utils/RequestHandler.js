@@ -1,5 +1,5 @@
 export default class RequestHandler {
-	static getRequestDataForPayload(request) {
+	static getRequestData(request) {
 		return {
 			url: `${request.protocol}://${request.hostname}${request.originalUrl}`,
 			body: request.body,
