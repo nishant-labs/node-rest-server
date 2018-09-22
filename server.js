@@ -38,7 +38,11 @@ const testData = {
 const serverConfigs = {
 	basePath: '/v2/api',
 	port: 8080,
-	delay: 2
+	delay: 2,
+	logger: {
+		debug: false,
+		enable: true,
+	}
 };
 
 const Start = () => {
