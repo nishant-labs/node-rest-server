@@ -1,25 +1,29 @@
+/* eslint-disable no-console */
+
 import chalk from 'chalk';
 import DateFormat from 'date-fns/format';
 
 const dateTime = () => DateFormat(Date.now(), 'DD-MM-YYYY HH-mm-ss');
 const appName = () => '[node-rest-server]';
 
-let isDebug;
-let isEnabled;
+let isDebug = false;
+let isEnabled = true;
 
-const getValue = (value, defaultValue) => value === undefined ? defaultValue : value; 
+const getValue = (value, defaultValue) => (value === undefined ? defaultValue : value);
 
 const getMessage = (type, message) => ({
 	appName: appName(),
 	level: type.toUpperCase(),
 	timestamp: dateTime(),
-	message: message.join(' '),
+	message: message.join(' ')
 });
 
 const print = (color, type, ...message) => {
 	if (isEnabled) {
 		const jsonMessage = getMessage(type, message);
-		console[type](chalk[color](jsonMessage.appName, '-', jsonMessage.timestamp, '-', jsonMessage.level, '\t-', jsonMessage.message)); // eslint-disable-line no-console 
+		console[type](
+			chalk[color](jsonMessage.appName, '-', jsonMessage.timestamp, '-', jsonMessage.level, '\t-', jsonMessage.message)
+		);
 	}
 };
 
@@ -31,15 +35,17 @@ export const logger = {
 			print('gray', 'debug', ...message);
 		}
 	},
-	error: (...message) => print('red', 'error', ...message),
+	error: (...message) => print('red', 'error', ...message)
 };
 
-export const initializeLogger = (loggerConfig) => {
+export const initializeLogger = loggerConfig => {
 	if (typeof loggerConfig === 'boolean') {
 		isDebug = false;
 		isEnabled = loggerConfig;
-	} else if(typeof loggerConfig === 'object'){
+	} else if (typeof loggerConfig === 'object') {
 		isDebug = getValue(loggerConfig.debug, false);
 		isEnabled = getValue(loggerConfig.enable, true);
 	}
 };
+
+/* eslint-enable no-console */

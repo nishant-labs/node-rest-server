@@ -117,6 +117,8 @@ This manages how the server will be configured
 | basePath | `{string}` |  | Common prefix for all the routes |
 | port | `{Number}` | `8000` | Port on which server will serve the content |
 | delay (sec) | `{Number}` | `0` | Forcefully delay the response timing in seconds |
+| logger | `{Object\|Boolean}` | `true` | Enable logging for application, a boolean value will enable/disable all logging features, an object can be passed with property `enable` to toggle the logging and `debug` to enable/disable debug logs |
+| filter | `{Function}` | `0` | Enable application level filter and pass returned value to controller. |
 
 ### Example
 
@@ -124,12 +126,13 @@ This manages how the server will be configured
 const serverConfig = {
   basePath: '/base/api',
   port: 8080,
-  delay: 2
+  delay: 2,
+  logger: {
+      enable: true,
+      debug: false,
+  },
+  filter: (requestData) => {
+      return { data: 'calculate' };
+  },
 };
 ```
-
-## Upcoming features
-
-- Request-response logging
-- Better Error handling
-- Global Filter

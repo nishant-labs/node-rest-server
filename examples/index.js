@@ -1,6 +1,6 @@
 const RestServer = require('node-rest-server').default;
 
-const nameController = (requestData) => {
+const nameController = requestData => {
 	const { gender, name } = requestData.body;
 	return {
 		status: 200,
@@ -9,22 +9,22 @@ const nameController = (requestData) => {
 			Age: 28
 		}
 	};
-}
+};
 
 const addressController = () => {
 	return { address: 'This Lovely World' };
-}
+};
 
 const endpoints = {
 	'/name': {
 		method: 'POST',
 		status: 200,
-		controller: nameController,
+		controller: nameController
 	},
 	'/address': {
 		method: 'GET',
-		controller: addressController,
-	},
+		controller: addressController
+	}
 };
 
 RestServer(endpoints);

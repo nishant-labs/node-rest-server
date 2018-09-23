@@ -1,0 +1,10 @@
+{
+	"printWidth": 120,
+	"parser": "babylon",
+	"arrowParens": "avoid",
+	"bracketSpacing": true,
+	"semi": true,
+	"useTabs": true,
+	"singleQuote": true,
+	"trailingComma": "none"
+}
