@@ -40,16 +40,16 @@ const serverConfigs = {
 	port: 8080,
 	delay: 2,
 	logger: {
-		debug: false,
 		enable: true,
+		debug: true
 	},
-	filter: (requestData) => {
+	filter: requestData => {
 		let isChecked = false;
 		if (requestData.body.name === 'test') {
 			isChecked = false;
 		}
 		return { data: 'data calculated for each request', isChecked };
-	},
+	}
 };
 
 const Start = () => {

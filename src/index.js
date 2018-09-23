@@ -5,14 +5,19 @@ import { initializeLogger, logger } from './utils/Logger';
 import RequestHandler from './utils/RequestHandler';
 
 export default (routeConfig, serverConfig = {}) => {
+	logger.info('Loading resources and starting server');
 	const app = express();
+	logger.debug('initializing application logger with', JSON.stringify(serverConfig.logger));
 	initializeLogger(serverConfig.logger);
 	try {
 		app.set('port', serverConfig.port || 8000);
 
+		logger.debug('loading json processor');
 		app.use(express.json());
+		logger.debug('loading URL encoder');
 		app.use(express.urlencoded({ extended: true }));
 
+		logger.debug('Applying global middleware');
 		app.use((request, response, next) => {
 			const data = RequestHandler.getRequestData(request);
 			logger.info('Request URL : ', JSON.stringify(data.url));
@@ -20,11 +25,12 @@ export default (routeConfig, serverConfig = {}) => {
 			logger.info('Request body : ', JSON.stringify(data.body));
 			if (typeof serverConfig.filter === 'function') {
 				const localData = serverConfig.filter(data);
-				response.locals = localData;
+				response.locals = localData || {};
 			}
 			next();
 		});
 
+		logger.debug('Registering /status endpoint to get routes information');
 		app.get('/status', (request, response) => {
 			response.send(app._router.stack);
 		});
@@ -35,14 +41,12 @@ export default (routeConfig, serverConfig = {}) => {
 			if (typeof data.method === 'string') {
 				const method = String(data.method);
 				logger.info('Registering route path:', method.toUpperCase(), uri);
-				app[method.toLowerCase()](
-					uri,
-					RouteProvider(data, serverConfig)
-				);
+				app[method.toLowerCase()](uri, RouteProvider(data, serverConfig));
 			}
 		});
 
 		if (app.get('env') === 'development') {
+			logger.debug('Loading Error handler');
 			app.use(errorHandler());
 		}
 

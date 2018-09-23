@@ -11,6 +11,6 @@ module.exports = merge.smart(webpackShared, {
 		path: path.join(process.cwd(), 'dist'),
 		filename: 'index.js',
 		library: 'node-rest-server',
-		libraryTarget: 'commonjs2',
-	},
+		libraryTarget: 'commonjs2'
+	}
 });

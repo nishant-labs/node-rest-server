@@ -6,7 +6,7 @@ export default (routeConfig, options) => (request, response) => {
 	let responseData;
 	try {
 		if (typeof routeConfig.controller === 'function') {
-			responseData = routeConfig.controller({ ...RequestHandler.getRequestData(request), ...response.locals });	
+			responseData = routeConfig.controller({ ...RequestHandler.getRequestData(request), ...response.locals });
 		} else if (typeof routeConfig.controller === 'object') {
 			responseData = routeConfig.controller;
 		}
