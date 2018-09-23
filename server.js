@@ -38,11 +38,22 @@ const testData = {
 const serverConfigs = {
 	basePath: '/v2/api',
 	port: 8080,
-	delay: 2
+	delay: 2,
+	logger: {
+		enable: true,
+		debug: true
+	},
+	filter: requestData => {
+		let isChecked = false;
+		if (requestData.body.name === 'test') {
+			isChecked = false;
+		}
+		return { data: 'data calculated for each request', isChecked };
+	}
 };
 
 const Start = () => {
-	const RestServer = require('./lib').default;
+	const RestServer = require('./dist').default;
 	RestServer(testData, serverConfigs);
 };
 
@@ -60,4 +71,4 @@ function getFile(file, timeout) {
 		}, timeout);
 	}
 }
-getFile('./lib', 1000);
+getFile('./dist', 1000);
