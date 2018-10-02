@@ -1,6 +1,6 @@
 import { logger } from '../utils/Logger';
-import RequestHandler from '../utils/RequestHandler';
-import ResponseHandler from '../utils/ResponseHandler';
+import RequestHandler from '../handlers/RequestHandler';
+import ResponseHandler from '../handlers/ResponseHandler';
 
 export default (routeConfig, options) => (request, response) => {
 	let responseData;
