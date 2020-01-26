@@ -6,7 +6,7 @@ export default class RequestHandler {
 			pathParams: request.params,
 			queryParams: request.query,
 			getHeader: request.get,
-			headers: request.headers
+			headers: request.headers,
 		};
 	}
 }

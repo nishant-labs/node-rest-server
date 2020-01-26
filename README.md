@@ -119,6 +119,7 @@ This manages how the server will be configured
 | delay (sec) | `{Number}` | `0` | Forcefully delay the response timing in seconds |
 | logger | `{Object\|Boolean}` | `true` | Enable logging for application, a boolean value will enable/disable all logging features, an object can be passed with property `enable` to toggle the logging and `debug` to enable/disable debug logs |
 | filter | `{Function}` | `0` | Enable application level filter and pass returned value to controller. |
+| cors | `{Object}` | `undefined` | Config should be as per [cors](https://github.com/expressjs/cors) package |
 
 ### Example
 
@@ -133,6 +134,9 @@ const serverConfig = {
   },
   filter: (requestData) => {
       return { data: 'calculate' };
+  },
+  cors: {
+    origin: '*'
   },
 };
 ```
