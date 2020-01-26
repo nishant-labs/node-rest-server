@@ -3,7 +3,7 @@
 import chalk from 'chalk';
 import DateFormat from 'date-fns/format';
 
-const dateTime = () => DateFormat(Date.now(), 'DD-MM-YYYY HH-mm-ss');
+const dateTime = () => DateFormat(Date.now(), 'dd-MM-yyyy HH-mm-ss');
 const appName = () => '[node-rest-server]';
 
 let isDebug = false;
@@ -15,7 +15,7 @@ const getMessage = (type, message) => ({
 	appName: appName(),
 	level: type.toUpperCase(),
 	timestamp: dateTime(),
-	message: message.join(' ')
+	message: message.join(' '),
 });
 
 const print = (color, type, ...message) => {
@@ -35,7 +35,7 @@ export const logger = {
 			print('gray', 'debug', ...message);
 		}
 	},
-	error: (...message) => print('red', 'error', ...message)
+	error: (...message) => print('red', 'error', ...message),
 };
 
 export const initializeLogger = ({ logger }) => {
