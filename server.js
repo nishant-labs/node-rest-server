@@ -50,6 +50,9 @@ const serverConfigs = {
 		}
 		return { data: 'data calculated for each request', isChecked };
 	},
+	cors: {
+		origin: '*',
+	},
 };
 
 const Start = () => {
