@@ -12,27 +12,27 @@ const testData = {
 				status: 200,
 				payload: {
 					name: `Welcome ${gender === 'male' ? 'Mr' : 'Miss'} ${name ? name : 'Anonymous'}`,
-					Age: 28
-				}
+					Age: 28,
+				},
 			};
-		}
+		},
 	},
-	'/test/data/address': {
-		method: 'POST',
+	'/test/data/data': {
+		method: 'GET',
 		status: 200,
-		controller: requestData => {
-			return { payload: { place: 'The World' }, requestData };
-		}
+		controller: () => {
+			return { payload: { place: 'The World' } };
+		},
 	},
 	'/data/name/:id': {
 		method: 'POST',
 		controller: requestData => {
 			return {
 				status: 500,
-				payload: { requestData: JSON.stringify(requestData) }
+				payload: { requestData: JSON.stringify(requestData) },
 			};
-		}
-	}
+		},
+	},
 };
 
 const serverConfigs = {
@@ -41,15 +41,18 @@ const serverConfigs = {
 	delay: 2,
 	logger: {
 		enable: true,
-		debug: true
+		debug: true,
 	},
 	filter: requestData => {
-		let isChecked = false;
+		let isChecked = true;
 		if (requestData.body.name === 'test') {
 			isChecked = false;
 		}
 		return { data: 'data calculated for each request', isChecked };
-	}
+	},
+	cors: {
+		origin: '*',
+	},
 };
 
 const Start = () => {

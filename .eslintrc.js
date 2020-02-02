@@ -12,8 +12,8 @@ module.exports = {
 	rules: {
 		indent: ['error', 'tab'],
 		'linebreak-style': ['error', 'unix'],
-		quotes: ['error', 'single'],
+		quotes: ['error', "single", { "avoidEscape": true }],
 		semi: ['error', 'always'],
-		'comma-dangle': ['error', 'never']
+		'comma-dangle': ['error', 'always-multiline']
 	}
 };

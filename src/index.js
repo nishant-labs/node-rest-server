@@ -1,39 +1,24 @@
 import express from 'express';
-const errorHandler = require('errorhandler');
-import { RouteProvider } from './providers';
+import { RouteProvider, MiddlewareProvider } from './providers';
 import { initializeLogger, logger } from './utils/Logger';
-import RequestHandler from './utils/RequestHandler';
+import { initPreProcessors } from './utils/ServerProcessor';
+import ErrorHandler from './handlers/ErrorHander';
+import { validateServerSettings } from './schema-validators';
 
 export default (routeConfig, serverConfig = {}) => {
-	logger.info('Loading resources and starting server');
-	const app = express();
-	logger.debug('initializing application logger with', JSON.stringify(serverConfig.logger));
-	initializeLogger(serverConfig.logger);
 	try {
-		app.set('port', serverConfig.port || 8000);
+		validateServerSettings(serverConfig);
+		logger.info('Loading resources and starting server');
+		const app = express();
+		logger.debug('initializing application logger with', JSON.stringify(serverConfig.logger));
+		initializeLogger(serverConfig);
+		logger.debug('Applying preprocessors');
+		initPreProcessors(app, serverConfig);
 
-		logger.debug('loading json processor');
-		app.use(express.json());
-		logger.debug('loading URL encoder');
-		app.use(express.urlencoded({ extended: true }));
-
-		logger.debug('Applying global middleware');
-		app.use((request, response, next) => {
-			const data = RequestHandler.getRequestData(request);
-			logger.info('Request URL : ', JSON.stringify(data.url));
-			logger.info('Request headers : ', JSON.stringify(data.headers));
-			logger.info('Request body : ', JSON.stringify(data.body));
-			if (typeof serverConfig.filter === 'function') {
-				const localData = serverConfig.filter(data);
-				response.locals = localData || {};
-			}
-			next();
-		});
-
-		logger.debug('Registering /status endpoint to get routes information');
-		app.get('/status', (request, response) => {
-			response.send(app._router.stack);
-		});
+		logger.debug('Applying global middlewares');
+		MiddlewareProvider.registerRequestLogger(app);
+		MiddlewareProvider.registerFilters(app, serverConfig);
+		MiddlewareProvider.registerStatusEndpoint(app);
 
 		Object.keys(routeConfig).forEach(value => {
 			const data = routeConfig[value];
@@ -45,10 +30,7 @@ export default (routeConfig, serverConfig = {}) => {
 			}
 		});
 
-		if (app.get('env') === 'development') {
-			logger.debug('Loading Error handler');
-			app.use(errorHandler());
-		}
+		ErrorHandler.registerDevHandler(app);
 
 		app.listen(app.get('port'), () => {
 			logger.info('Server started listening on port', app.get('port'));
