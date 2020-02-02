@@ -118,7 +118,7 @@ This manages how the server will be configured
 | port | `{Number}` | `8000` | Port on which server will serve the content |
 | delay (sec) | `{Number}` | `0` | Forcefully delay the response timing in seconds |
 | logger | `{Object\|Boolean}` | `true` | Enable logging for application, a boolean value will enable/disable all logging features, an object can be passed with property `enable` to toggle the logging and `debug` to enable/disable debug logs |
-| filter | `{Function}` | `0` | Enable application level filter and pass returned value to controller. |
+| filter | `{Function}` |  | Enable application level filter and pass returned value to controller. |
 | cors | `{Object}` | `undefined` | Config should be as per [cors](https://github.com/expressjs/cors) package |
 
 ### Example
