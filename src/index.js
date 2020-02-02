@@ -3,13 +3,15 @@ import { RouteProvider, MiddlewareProvider } from './providers';
 import { initializeLogger, logger } from './utils/Logger';
 import { initPreProcessors } from './utils/ServerProcessor';
 import ErrorHandler from './handlers/ErrorHander';
+import { validateServerSettings } from './schema-validators';
 
 export default (routeConfig, serverConfig = {}) => {
-	logger.info('Loading resources and starting server');
-	const app = express();
-	logger.debug('initializing application logger with', JSON.stringify(serverConfig.logger));
-	initializeLogger(serverConfig);
 	try {
+		validateServerSettings(serverConfig);
+		logger.info('Loading resources and starting server');
+		const app = express();
+		logger.debug('initializing application logger with', JSON.stringify(serverConfig.logger));
+		initializeLogger(serverConfig);
 		logger.debug('Applying preprocessors');
 		initPreProcessors(app, serverConfig);
 
