@@ -1,6 +1,6 @@
 {
   "name": "node-rest-server",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Configurable node rest server",
   "main": "lib/index.js",
   "scripts": {
