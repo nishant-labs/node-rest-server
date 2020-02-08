@@ -9,6 +9,6 @@
   "author": "Nishant Kumar Sinha",
   "license": "ISC",
   "dependencies": {
-    "node-rest-server": "^1.0.0"
+    "node-rest-server": "^1.2.1"
   }
 }

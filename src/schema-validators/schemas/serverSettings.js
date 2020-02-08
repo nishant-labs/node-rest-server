@@ -37,7 +37,7 @@ export default {
 			],
 			default: true,
 		},
-		filter: { type: 'function' },
-		cors: { type: 'any' },
+		filter: { type: 'function', optional: true },
+		cors: { type: 'any', optional: true },
 	},
 };

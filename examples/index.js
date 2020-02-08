@@ -6,8 +6,8 @@ const nameController = requestData => {
 		status: 200,
 		payload: {
 			name: `Welcome ${gender === 'male' ? 'Mr' : 'Miss'} ${name ? name : 'Anonymous'}`,
-			Age: 28
-		}
+			Age: 28,
+		},
 	};
 };
 
@@ -19,12 +19,12 @@ const endpoints = {
 	'/name': {
 		method: 'POST',
 		status: 200,
-		controller: nameController
+		controller: nameController,
 	},
 	'/address': {
 		method: 'GET',
-		controller: addressController
-	}
+		controller: addressController,
+	},
 };
 
 RestServer(endpoints);
