@@ -4,7 +4,7 @@
   "description": "Configurable node rest server",
   "main": "lib/index.js",
   "scripts": {
-    "prod:build": "webpack --config configuration/webpack.prod.js",
+    "build": "webpack --config configuration/webpack.prod.js",
     "dev:build": "webpack --config configuration/webpack.dev.js",
     "dev:server": "nodemon --watch lib --watch server.js --delay 2.5 server.js",
     "start": "run-p dev:*",
