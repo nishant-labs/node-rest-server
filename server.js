@@ -24,6 +24,13 @@ const testData = {
 			return { payload: { place: 'The World' } };
 		},
 	},
+	'/test/data/async': {
+		method: 'GET',
+		status: 200,
+		controller: async () => {
+			return { payload: { place: 'The World is Async' } };
+		},
+	},
 	'/data/name/:id': {
 		method: 'POST',
 		controller: requestData => {
@@ -65,7 +72,7 @@ function getFile(file, timeout) {
 	if (exists) {
 		Start();
 	} else {
-		const stopTimer = setInterval(function() {
+		const stopTimer = setInterval(function () {
 			const fileExists = fs.existsSync(file);
 			if (fileExists) {
 				clearInterval(stopTimer);
