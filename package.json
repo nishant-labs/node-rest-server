@@ -1,66 +1,75 @@
 {
-  "name": "node-rest-server",
-  "version": "1.2.2",
-  "description": "Configurable node rest server",
-  "main": "lib/index.js",
-  "scripts": {
-    "build": "webpack --config configuration/webpack.prod.js",
-    "dev:build": "webpack --config configuration/webpack.dev.js",
-    "dev:server": "nodemon --watch lib --watch server.js --delay 2.5 server.js",
-    "start": "run-p dev:*",
-    "format": "prettier './src/**/*' --write"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run format"
-    }
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:nishant-labs/node-rest-server.git"
-  },
-  "files": [
-    "lib"
-  ],
-  "keywords": [
-    "node rest",
-    "rest-server",
-    "express rest wrapper",
-    "configuration only rest server"
-  ],
-  "author": "Nishant Kumar Sinha",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/nishant-labs/node-rest-server/issues"
-  },
-  "homepage": "https://github.com/nishant-labs/node-rest-server#readme",
-  "dependencies": {
-    "chalk": "3.0.0",
-    "cors": "2.8.5",
-    "date-fns": "2.9.0",
-    "errorhandler": "1.5.1",
-    "express": "4.17.1",
-    "fastest-validator": "1.0.0"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.8.3",
-    "@babel/plugin-proposal-object-rest-spread": "^7.8.3",
-    "@babel/plugin-transform-classes": "7.8.3",
-    "@babel/plugin-transform-template-literals": "7.8.3",
-    "@babel/preset-env": "^7.8.3",
-    "@babel/register": "7.8.3",
-    "babel-eslint": "10.0.3",
-    "babel-loader": "^8.0.6",
-    "eslint": "6.8.0",
-    "eslint-loader": "3.0.3",
-    "husky": "4.0.10",
-    "nodemon": "^2.0.2",
-    "npm-run-all": "4.1.5",
-    "prettier": "1.19.1",
-    "source-map-support": "0.5.16",
-    "webpack": "4.41.5",
-    "webpack-cli": "3.3.10",
-    "webpack-merge": "4.2.2",
-    "webpack-node-externals": "1.7.2"
-  }
+	"name": "node-rest-server",
+	"version": "1.2.2",
+	"description": "Configurable node rest server",
+	"main": "lib/index.js",
+	"module": "lib/index.esm.js",
+	"scripts": {
+		"start": "run-p dev:*",
+		"local": "",
+		"build": "rollup --config scripts/rollup/rollup.config.js",
+		"dev:watch": "watch 'NODE_ENV='development' && npm run build' src dev",
+		"dev:server": "nodemon --inspect --watch lib dev/server.js",
+		"lint": "eslint './src/**/*'",
+		"lint:fix": "eslint './src/**/*' --fix",
+		"format": "prettier './src/**/*' --check",
+		"format:fix": "prettier './src/**/*' --write"
+	},
+	"lint-staged": {
+		"src/**/*": [
+			"npm run format:fix",
+			"npm run lint:fix"
+		]
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "lint-staged"
+		}
+	},
+	"repository": {
+		"type": "git",
+		"url": "git@github.com:nishant-labs/node-rest-server.git"
+	},
+	"files": [
+		"lib"
+	],
+	"keywords": [
+		"node rest",
+		"rest-server",
+		"express rest wrapper",
+		"configuration only rest server"
+	],
+	"author": "Nishant Kumar Sinha",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/nishant-labs/node-rest-server/issues"
+	},
+	"homepage": "https://github.com/nishant-labs/node-rest-server#readme",
+	"dependencies": {
+		"chalk": "4.1.0",
+		"cors": "2.8.5",
+		"date-fns": "2.15.0",
+		"errorhandler": "1.5.1",
+		"express": "4.17.1",
+		"fastest-validator": "1.5.1",
+		"watch": "1.0.2"
+	},
+	"devDependencies": {
+		"@babel/core": "7.10.5",
+		"@babel/plugin-proposal-numeric-separator": "7.10.4",
+		"@babel/plugin-proposal-object-rest-spread": "7.10.4",
+		"@babel/plugin-transform-classes": "7.10.4",
+		"@babel/plugin-transform-template-literals": "7.10.5",
+		"@babel/preset-env": "7.10.4",
+		"@babel/register": "7.10.5",
+		"@rollup/plugin-babel": "5.1.0",
+		"@rollup/plugin-node-resolve": "8.4.0",
+		"eslint": "7.4.0",
+		"eslint-loader": "4.0.2",
+		"lint-staged": "10.2.11",
+		"nodemon": "2.0.4",
+		"npm-run-all": "4.1.5",
+		"prettier": "2.0.5",
+		"rollup": "2.22.0"
+	}
 }
