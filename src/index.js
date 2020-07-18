@@ -5,7 +5,7 @@ import { initPreProcessors } from './utils/ServerProcessor';
 import ErrorHandler from './handlers/ErrorHander';
 import { validateServerSettings } from './schema-validators';
 
-export default (routeConfig, serverConfig = {}) => {
+const NodeRestServer = (routeConfig, serverConfig = {}) => {
 	try {
 		validateServerSettings(serverConfig);
 		logger.info('Loading resources and starting server');
@@ -20,7 +20,7 @@ export default (routeConfig, serverConfig = {}) => {
 		MiddlewareProvider.registerFilters(app, serverConfig);
 		MiddlewareProvider.registerStatusEndpoint(app);
 
-		Object.keys(routeConfig).forEach(value => {
+		Object.keys(routeConfig).forEach((value) => {
 			const data = routeConfig[value];
 			const uri = `${serverConfig.basePath || ''}${value}`;
 			if (typeof data.method === 'string') {
@@ -39,3 +39,6 @@ export default (routeConfig, serverConfig = {}) => {
 		logger.error(error);
 	}
 };
+
+const nodeServer = (module.exports = NodeRestServer);
+nodeServer.NodeRestServer = NodeRestServer;

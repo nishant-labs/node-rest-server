@@ -1,12 +1,11 @@
 const fs = require('fs');
-
-process.env.NODE_ENV = 'development';
+const path = require('path');
 
 const testData = {
 	'/test/data/name': {
 		method: 'POST',
 		status: 200,
-		controller: requestData => {
+		controller: (requestData) => {
 			const { gender, name } = requestData.body;
 			return {
 				status: 200,
@@ -33,7 +32,7 @@ const testData = {
 	},
 	'/data/name/:id': {
 		method: 'POST',
-		controller: requestData => {
+		controller: (requestData) => {
 			return {
 				status: 500,
 				payload: { requestData: JSON.stringify(requestData) },
@@ -50,7 +49,7 @@ const serverConfigs = {
 		enable: true,
 		debug: true,
 	},
-	filter: requestData => {
+	filter: (requestData) => {
 		let isChecked = true;
 		if (requestData.body.name === 'test') {
 			isChecked = false;
@@ -63,11 +62,11 @@ const serverConfigs = {
 };
 
 const Start = () => {
-	const RestServer = require('./dist').default;
+	const RestServer = require('../lib');
 	RestServer(testData, serverConfigs);
 };
 
-function getFile(file, timeout) {
+const getFile = (file, timeout) => {
 	const exists = fs.existsSync(file);
 	if (exists) {
 		Start();
@@ -80,5 +79,6 @@ function getFile(file, timeout) {
 			}
 		}, timeout);
 	}
-}
-getFile('./dist', 1000);
+};
+
+getFile(path.join(__dirname, '../lib/index.js'), 1000);
