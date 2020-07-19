@@ -70,8 +70,8 @@ const serverConfigs = {
 };
 
 const Start = () => {
-	const RestServer = require('../lib');
-	RestServer(testData, serverConfigs);
+	const { NodeRestServer } = require('../lib');
+	NodeRestServer(testData, serverConfigs);
 };
 
 const getFile = (file, timeout) => {

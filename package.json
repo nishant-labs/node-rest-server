@@ -1,6 +1,6 @@
 {
 	"name": "node-rest-server",
-	"version": "1.2.2",
+	"version": "2.0.0",
 	"description": "Configurable node rest server",
 	"main": "lib/index.js",
 	"module": "lib/index.esm.js",
