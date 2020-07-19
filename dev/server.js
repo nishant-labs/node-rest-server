@@ -49,7 +49,7 @@ const serverConfigs = {
 		enable: true,
 		debug: true,
 	},
-	filter: (requestData) => {
+	filter: async (requestData) => {
 		let isChecked = true;
 		if (requestData.body.name === 'test') {
 			isChecked = false;

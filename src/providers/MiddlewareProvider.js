@@ -1,5 +1,6 @@
 import { logger } from '../utils/Logger';
 import RequestHandler from '../handlers/RequestHandler';
+import { errorHandler } from '../utils/ErrorUtils';
 
 export default class MiddlewareProvider {
 	static registerRequestLogger(app) {
@@ -19,8 +20,15 @@ export default class MiddlewareProvider {
 			const data = RequestHandler.getRequestData(request);
 			if (typeof serverConfig.filter === 'function') {
 				logger.info('Executing filter...');
-				const localData = serverConfig.filter(data);
-				response.locals = localData || {};
+				const filterData = serverConfig.filter(data);
+				if (filterData instanceof Promise) {
+					filterData.then((filterDataResponse) => {
+						response.locals = filterDataResponse || {};
+						next();
+					}, errorHandler);
+					return;
+				}
+				response.locals = filterData || {};
 			}
 			next();
 		});
