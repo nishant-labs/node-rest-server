@@ -1,6 +1,6 @@
 import { logger } from '../utils/Logger';
 import { GLOBAL_API_ERROR } from '../constants/global';
-import RequestHandler from '../handlers/RequestHandler';
+import { getRequestData, getFilterData } from '../handlers/RequestHandler';
 import ResponseHandler from '../handlers/ResponseHandler';
 import { errorHandler } from '../utils/ErrorUtils';
 
@@ -18,7 +18,7 @@ const sendResponse = (routeConfig, responseData, response, options) => {
 
 const handleControllerResponse = (routeConfig, request, response) => {
 	if (typeof routeConfig.controller === 'function') {
-		return routeConfig.controller({ ...RequestHandler.getRequestData(request), ...response.locals });
+		return routeConfig.controller({ ...getRequestData(request), ...getFilterData(response) });
 	} else if (typeof routeConfig.controller === 'object') {
 		return routeConfig.controller;
 	}
@@ -29,14 +29,20 @@ export default (routeConfig, options) => (request, response) => {
 	try {
 		const responseData = handleControllerResponse(routeConfig, request, response, options);
 		if (responseData instanceof Promise) {
-			responseData.then((data) => {
-				sendResponse(routeConfig, data, response, options);
-			}, errorHandler);
+			responseData.then(
+				(data) => {
+					sendResponse(routeConfig, data, response, options);
+				},
+				(error) => {
+					errorHandler(error);
+					response.status(GLOBAL_API_ERROR).json(error.message);
+				},
+			);
 			return;
 		}
 		sendResponse(routeConfig, responseData, response, options);
 	} catch (error) {
-		logger.error(JSON.stringify(error));
+		errorHandler(error);
 		response.status(GLOBAL_API_ERROR).json(error.message);
 	}
 };

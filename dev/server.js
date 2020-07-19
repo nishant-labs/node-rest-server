@@ -30,6 +30,14 @@ const testData = {
 			return { payload: { place: 'The World is Async' } };
 		},
 	},
+	'/test/data/async/error': {
+		method: 'GET',
+		status: 200,
+		controller: async ({ filter }) => {
+			console.log('Filter Data: ', JSON.stringify(filter));
+			throw Error('error');
+		},
+	},
 	'/data/name/:id': {
 		method: 'POST',
 		controller: (requestData) => {
