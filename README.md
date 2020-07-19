@@ -4,7 +4,7 @@
 
 Configuration only node rest server
 
-The library will start the express server by just using routes configuration.
+Get your own rest based nodejs server within minutes by just providing endpoints and controller.
 
 ## Features
 
@@ -18,6 +18,8 @@ The library will start the express server by just using routes configuration.
 
 - Can be used for creating rest micro-service in minutes (help me improve this library)
 
+Do you use for anything else!
+
 ## Installation
 
 This is a [Node.js](https://nodejs.org/en/) module available through the [npm registry](https://www.npmjs.com/package/node-rest-server). Install using below command.
@@ -29,19 +31,21 @@ npm install --save node-rest-server
 ## Importing
 
 ```js
-import RestServer from "node-rest-server"; // ES6
+import NodeRestServer from "node-rest-server"; // ES6
 or
-var RestServer = require("node-rest-server"); // ES5
+const NodeRestServer = require("node-rest-server"); // ES5
+or
+import { NodeRestServer } from "node-rest-server"; // If you like to use named export
 
 // call it as function and pass configuration
-RestServer(routeConfig, serverConfig);
+NodeRestServer(routeConfig, serverConfig);
 
 ```
 
 ## Usage Example
 
 ```js
-import RestServer from "node-rest-server";
+import NodeRestServer from "node-rest-server";
 
 const routeConfig = {
     '/api1': {
@@ -51,7 +55,7 @@ const routeConfig = {
     },
 };
 
-RestServer(routeConfig);
+NodeRestServer(routeConfig);
 ```
 
 ## Sample
@@ -70,14 +74,14 @@ A route configuration is an object with key(_route path_) value(_route options_)
 | Name | Type | Default | Description |
 |:---:|:---:|:---:|:---|
 | method | `{string}` | `GET` | Method defines the type of request controller will handle |
-| controller | `{function\|object}` |  | This function/object will contain the business logic for the route path. For a function an object is passed which will contain request `url`, `body`, `params` and `header` to be used. |
+| controller | `{function\|object}` |  | This function/object will contain the business logic for the route path. For a function an object is passed which will contain request `url`, `body`, `params` and `header` and response of `filter` to be used. |
 | status (_optional_) | `{string}` | `200` | An appropriate HTTP response status code which server will give response for a request |
 
 ### Controller method
 
-A controller can either
+A controller can either return
 
-- return an object with `status` and `payload`;
+- an object with `status` and `payload`;
 
 ```js
 {
@@ -88,9 +92,11 @@ A controller can either
 
 or
 
-- return a response data object (valid as per `JSON.stringify()` json spec)
+- a response data object (valid as per `JSON.stringify()` json spec)
 
-### Example
+- a `Promise` which then resolves to return data with above spec
+
+### Route config Example
 
 ```js
 const routeConfig = {
@@ -103,6 +109,13 @@ const routeConfig = {
     method: 'POST',
     controller: requestData => {
       return { status: 200, payload: { data: 'Data' } };
+    },
+  },
+  '/async/endpoint': {
+    method: 'POST',
+    controller: async (requestData) => {
+      // Some DB/api calls
+      return { status: 200, payload: { data: 'Async data' } };
     },
   },
 }
@@ -118,10 +131,10 @@ This manages how the server will be configured
 | port | `{Number}` | `8000` | Port on which server will serve the content |
 | delay (sec) | `{Number}` | `0` | Forcefully delay the response timing in seconds |
 | logger | `{Object\|Boolean}` | `true` | Enable logging for application, a boolean value will enable/disable all logging features, an object can be passed with property `enable` to toggle the logging and `debug` to enable/disable debug logs |
-| filter | `{Function}` |  | Enable application level filter and pass returned value to controller. |
+| filter | `{Function}` |  | Enable application level filter and pass returned value(supports `Promise`) to controller. |
 | cors | `{Object}` | `undefined` | Config should be as per [cors](https://github.com/expressjs/cors) package |
 
-### Example
+### Server config Example
 
 ```js
 const serverConfig = {
