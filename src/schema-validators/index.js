@@ -9,7 +9,7 @@ const commonResultProcessor = (result, type) => {
 	}
 };
 
-export const validateServerSettings = serverConfig => {
+export const validateServerSettings = (serverConfig) => {
 	logger.info('Validating Server settings');
 	const validationStatus = serverSettingsValidator(serverConfig);
 	commonResultProcessor(validationStatus, 'server settings');

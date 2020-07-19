@@ -22,7 +22,7 @@ const print = (color, type, ...message) => {
 	if (isEnabled) {
 		const jsonMessage = getMessage(type, message);
 		console[type](
-			chalk[color](jsonMessage.appName, '-', jsonMessage.timestamp, '-', jsonMessage.level, '\t-', jsonMessage.message)
+			chalk[color](jsonMessage.appName, '-', jsonMessage.timestamp, '-', jsonMessage.level, '\t-', jsonMessage.message),
 		);
 	}
 };

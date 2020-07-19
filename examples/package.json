@@ -1,6 +1,6 @@
 {
   "name": "examples",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "node-rest-server examples",
   "main": "index.js",
   "scripts": {
@@ -9,6 +9,6 @@
   "author": "Nishant Kumar Sinha",
   "license": "ISC",
   "dependencies": {
-    "node-rest-server": "^1.2.1"
+    "node-rest-server": "2.0.0"
   }
 }

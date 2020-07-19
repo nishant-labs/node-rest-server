@@ -1,4 +1,4 @@
-const RestServer = require('node-rest-server').default;
+const RestServer = require('node-rest-server');
 
 const nameController = requestData => {
 	const { gender, name } = requestData.body;
@@ -15,6 +15,14 @@ const addressController = () => {
 	return { address: 'This Lovely World' };
 };
 
+const profileController = async () => {
+	const data = await Promise.resolve({ profile: { name: 'Anonymous', address: 'This Lovely World' } });
+	return {
+		status: 200,
+		payload: data,
+	};
+};
+
 const endpoints = {
 	'/name': {
 		method: 'POST',
@@ -24,6 +32,11 @@ const endpoints = {
 	'/address': {
 		method: 'GET',
 		controller: addressController,
+	},
+
+	'/profile': {
+		method: 'GET',
+		controller: profileController,
 	},
 };
 
