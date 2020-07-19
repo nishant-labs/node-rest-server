@@ -2,6 +2,7 @@ import { logger } from '../utils/Logger';
 import { GLOBAL_API_ERROR } from '../constants/global';
 import RequestHandler from '../handlers/RequestHandler';
 import ResponseHandler from '../handlers/ResponseHandler';
+import { errorHandler } from '../utils/ErrorUtils';
 
 const sendResponse = (routeConfig, responseData, response, options) => {
 	const { status, data } = ResponseHandler.getResponseData(routeConfig, responseData, options);
@@ -28,14 +29,9 @@ export default (routeConfig, options) => (request, response) => {
 	try {
 		const responseData = handleControllerResponse(routeConfig, request, response, options);
 		if (responseData instanceof Promise) {
-			responseData.then(
-				(data) => {
-					sendResponse(routeConfig, data, response, options);
-				},
-				(err) => {
-					logger.error(JSON.stringify(err));
-				}
-			);
+			responseData.then((data) => {
+				sendResponse(routeConfig, data, response, options);
+			}, errorHandler);
 			return;
 		}
 		sendResponse(routeConfig, responseData, response, options);
