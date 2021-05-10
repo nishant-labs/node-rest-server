@@ -1,6 +1,6 @@
-const RestServer = require('node-rest-server');
+import RestServer from 'node-rest-server';
 
-const nameController = requestData => {
+const nameController = (requestData) => {
 	const { gender, name } = requestData.body;
 	return {
 		status: 200,

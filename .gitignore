@@ -64,3 +64,11 @@ typings/
 
 # IDE directories
 .vscode
+
+# yarn pnp
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnp.*

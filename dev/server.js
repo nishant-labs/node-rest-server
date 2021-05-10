@@ -70,7 +70,7 @@ const serverConfigs = {
 };
 
 const Start = () => {
-	const { NodeRestServer } = require('../lib');
+	const NodeRestServer = require('../lib');
 	NodeRestServer(testData, serverConfigs);
 };
 
