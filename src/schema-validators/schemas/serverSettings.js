@@ -39,5 +39,6 @@ export default {
 		},
 		filter: { type: 'function', optional: true },
 		cors: { type: 'any', optional: true },
+		getDatabaseConnection: { type: 'function', optional: true },
 	},
 };
