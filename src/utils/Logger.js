@@ -19,7 +19,15 @@ const getMessage = (type, message) => ({
 const print = (color, type, ...message) => {
 	if (isEnabled) {
 		const jsonMessage = getMessage(type, message);
-		const formattedLog = chalk[color](jsonMessage.appName, '-', jsonMessage.timestamp, '-', jsonMessage.level, '\t-', jsonMessage.message);
+		const formattedLog = chalk[color](
+			jsonMessage.appName,
+			'-',
+			jsonMessage.timestamp,
+			'-',
+			jsonMessage.level,
+			'\t-',
+			jsonMessage.message,
+		);
 		console[type](formattedLog);
 	}
 };
