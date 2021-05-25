@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-
 import chalk from 'chalk';
 import DateFormat from 'date-fns/format';
 
@@ -21,13 +19,21 @@ const getMessage = (type, message) => ({
 const print = (color, type, ...message) => {
 	if (isEnabled) {
 		const jsonMessage = getMessage(type, message);
-		console[type](
-			chalk[color](jsonMessage.appName, '-', jsonMessage.timestamp, '-', jsonMessage.level, '\t-', jsonMessage.message),
+		const formattedLog = chalk[color](
+			jsonMessage.appName,
+			'-',
+			jsonMessage.timestamp,
+			'-',
+			jsonMessage.level,
+			'\t-',
+			jsonMessage.message,
 		);
+		console[type](formattedLog);
 	}
 };
 
 export const logger = {
+	log: (...message) => print('green', 'log', ...message),
 	info: (...message) => print('green', 'info', ...message),
 	warn: (...message) => print('yellow', 'warn', ...message),
 	debug: (...message) => {
@@ -36,6 +42,7 @@ export const logger = {
 		}
 	},
 	error: (...message) => print('red', 'error', ...message),
+	trace: (...message) => print('red', 'trace', ...message),
 };
 
 export const initializeLogger = ({ logger }) => {

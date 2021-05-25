@@ -4,6 +4,7 @@ import { initializeLogger, logger } from './utils/Logger';
 import { initPreProcessors } from './utils/ServerProcessor';
 import ErrorHandler from './handlers/ErrorHander';
 import { validateServerSettings } from './schema-validators';
+import { getControllerOptions } from './handlers/RequestHandler';
 
 const NodeRestServer = (routeConfig, serverConfig = {}) => {
 	try {
@@ -19,6 +20,7 @@ const NodeRestServer = (routeConfig, serverConfig = {}) => {
 		MiddlewareProvider.registerRequestLogger(app);
 		MiddlewareProvider.registerFilters(app, serverConfig);
 		MiddlewareProvider.registerStatusEndpoint(app);
+		const controllerOptions = getControllerOptions(serverConfig);
 
 		Object.keys(routeConfig).forEach((value) => {
 			const data = routeConfig[value];
@@ -26,7 +28,7 @@ const NodeRestServer = (routeConfig, serverConfig = {}) => {
 			if (typeof data.method === 'string') {
 				const method = String(data.method);
 				logger.info('Registering route path:', method.toUpperCase(), uri);
-				app[method.toLowerCase()](uri, RouteProvider(data, serverConfig));
+				app[method.toLowerCase()](uri, RouteProvider(data, controllerOptions, serverConfig));
 			}
 		});
 
