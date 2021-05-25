@@ -1,3 +1,5 @@
+import { extractIfAvailable } from '../utils/object';
+
 export const getRequestData = (request) => ({
 	url: `${request.protocol}://${request.hostname}${request.originalUrl}`,
 	body: request.body,
@@ -10,3 +12,8 @@ export const getRequestData = (request) => ({
 export const getFilterData = (response) => ({
 	filter: response.locals,
 });
+
+export const getControllerOptions = (options) => {
+	const sanitisedOptions = extractIfAvailable(options, 'getDatabaseConnection');
+	return sanitisedOptions || {};
+};

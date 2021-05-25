@@ -19,8 +19,10 @@ const testData = {
 	'/test/data/data': {
 		method: 'GET',
 		status: 200,
-		controller: () => {
-			return { payload: { place: 'The World' } };
+		controller: async (requestData, options) => {
+			const { getDatabaseConnection } = options;
+			const dbData = await getDatabaseConnection(requestData);
+			return { payload: { place: 'The World', dbData } };
 		},
 	},
 	'/test/data/async': {
@@ -57,6 +59,9 @@ const serverConfigs = {
 		enable: true,
 		debug: true,
 	},
+	getDatabaseConnection: async () => {
+		return Promise.resolve('me');
+	},
 	filter: async (requestData) => {
 		let isChecked = true;
 		if (requestData.body.name === 'test') {
@@ -70,7 +75,7 @@ const serverConfigs = {
 };
 
 const Start = () => {
-	const { NodeRestServer } = require('../lib');
+	const NodeRestServer = require('../lib');
 	NodeRestServer(testData, serverConfigs);
 };
 

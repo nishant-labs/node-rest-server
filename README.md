@@ -31,28 +31,27 @@ npm install --save node-rest-server
 ## Importing
 
 ```js
-import NodeRestServer from "node-rest-server"; // ES6
-or
-const NodeRestServer = require("node-rest-server"); // ES5
-or
-import { NodeRestServer } from "node-rest-server"; // If you like to use named export
+import NodeRestServer from 'node-rest-server'; // ES6
+// or
+const NodeRestServer = require('node-rest-server'); // ES5
+// or
+import { NodeRestServer } from 'node-rest-server'; // If you like to use named export
 
 // call it as function and pass configuration
 NodeRestServer(routeConfig, serverConfig);
-
 ```
 
 ## Usage Example
 
 ```js
-import NodeRestServer from "node-rest-server";
+import NodeRestServer from 'node-rest-server';
 
 const routeConfig = {
-    '/api1': {
-        method: 'GET',
-        status: 200,
-        controller: () => 'Data',
-    },
+	'/api1': {
+		method: 'GET',
+		status: 200,
+		controller: () => 'Data',
+	},
 };
 
 NodeRestServer(routeConfig);
@@ -71,11 +70,11 @@ A route configuration is an object with key(_route path_) value(_route options_)
 
 ### Route Options
 
-| Name | Type | Default | Description |
-|:---:|:---:|:---:|:---|
-| method | `{string}` | `GET` | Method defines the type of request controller will handle |
-| controller | `{function\|object}` |  | This function/object will contain the business logic for the route path. For a function an object is passed which will contain request `url`, `body`, `params` and `header` and response of `filter` to be used. |
-| status (_optional_) | `{string}` | `200` | An appropriate HTTP response status code which server will give response for a request |
+| Name                | Type               | Default | Description                                                                                                                                                                                                      |
+| :------------------ | :----------------- | :------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| method              | `String`           | `GET`   | Method defines the type of request controller will handle                                                                                                                                                        |
+| controller          | `function\|Object` |         | This function/object will contain the business logic for the route path. For a function an object is passed which will contain request `url`, `body`, `params` and `header` and response of `filter` to be used. |
+| status (_optional_) | `String`           | `200`   | An appropriate HTTP response status code which server will give response for a request                                                                                                                           |
 
 ### Controller method
 
@@ -100,39 +99,41 @@ or
 
 ```js
 const routeConfig = {
-  '/endpoint1': {
-    method: 'GET',
-    status: 200,
-    controller: () => 'Data',
-  },
-  '/endpoint2': {
-    method: 'POST',
-    controller: requestData => {
-      return { status: 200, payload: { data: 'Data' } };
-    },
-  },
-  '/async/endpoint': {
-    method: 'POST',
-    controller: async (requestData) => {
-      // Some DB/api calls
-      return { status: 200, payload: { data: 'Async data' } };
-    },
-  },
-}
+	'/endpoint1': {
+		method: 'GET',
+		status: 200,
+		controller: () => 'Data',
+	},
+	'/endpoint2': {
+		method: 'POST',
+		controller: async (requestData, { getDatabaseConnection }) => {
+			const dataFromDB = await getDatabaseConnection();
+			return { status: 200, payload: { data: 'Data', dataFromDB } };
+		},
+	},
+	'/async/endpoint': {
+		method: 'POST',
+		controller: async (requestData) => {
+			// Some DB/api calls
+			return { status: 200, payload: { data: 'Async data' } };
+		},
+	},
+};
 ```
 
 ## Server Configuration (_optional_)
 
 This manages how the server will be configured
 
-| Name | Type | Default | Description |
-|:---:|:---:|:---:|:---|
-| basePath | `{string}` |  | Common prefix for all the routes |
-| port | `{Number}` | `8000` | Port on which server will serve the content |
-| delay (sec) | `{Number}` | `0` | Forcefully delay the response timing in seconds |
-| logger | `{Object\|Boolean}` | `true` | Enable logging for application, a boolean value will enable/disable all logging features, an object can be passed with property `enable` to toggle the logging and `debug` to enable/disable debug logs |
-| filter | `{Function}` |  | Enable application level filter and pass returned value(supports `Promise`) to controller. |
-| cors | `{Object}` | `undefined` | Config should be as per [cors](https://github.com/expressjs/cors) package |
+| Name                  | Type              | Default     | Description                                                                                                                                                                                             |
+| :-------------------- | :---------------- | :---------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| basePath              | `String`          |             | Common prefix for all the routes                                                                                                                                                                        |
+| port                  | `Number`          | `8000`      | Port on which server will serve the content                                                                                                                                                             |
+| delay (sec)           | `Number`          | `0`         | Forcefully delay the response timing in seconds                                                                                                                                                         |
+| logger                | `Object\|Boolean` | `true`      | Enable logging for application, a boolean value will enable/disable all logging features, an object can be passed with property `enable` to toggle the logging and `debug` to enable/disable debug logs |
+| getDatabaseConnection | `function`        |             | Provides a mechanism to get DB connection using globally available method passed (supports `Promise`) to controller in second parameter.                                                                |
+| filter                | `function`        |             | Enable application level filter and pass returned value(supports `Promise`) to controller.                                                                                                              |
+| cors                  | `Object`          | `undefined` | Config should be as per [cors](https://github.com/expressjs/cors) package                                                                                                                               |
 
 ### Server config Example
 
@@ -145,6 +146,9 @@ const serverConfig = {
       enable: true,
       debug: false,
   },
+  getDatabaseConnection: async () => {
+		return Promise.resolve('db connection');
+	}
   filter: (requestData) => {
       return { data: 'calculate' };
   },

@@ -4,34 +4,35 @@ import { getRequestData, getFilterData } from '../handlers/RequestHandler';
 import ResponseHandler from '../handlers/ResponseHandler';
 import { errorHandler } from '../utils/ErrorUtils';
 
-const sendResponse = (routeConfig, responseData, response, options) => {
-	const { status, data } = ResponseHandler.getResponseData(routeConfig, responseData, options);
+const sendResponse = (routeConfig, responseData, response, serverConfig) => {
+	const { status, data } = ResponseHandler.getResponseData(routeConfig, responseData, serverConfig);
 	logger.info('Response sent : ', JSON.stringify(data));
-	if (options.delay > 0) {
+	if (serverConfig.delay > 0) {
 		setTimeout(() => {
 			response.status(status).json(data);
-		}, options.delay * 1000);
+		}, serverConfig.delay * 1000);
 	} else {
 		response.status(status).json(data);
 	}
 };
 
-const handleControllerResponse = (routeConfig, request, response) => {
+const handleControllerResponse = (routeConfig, request, response, controllerOptions) => {
 	if (typeof routeConfig.controller === 'function') {
-		return routeConfig.controller({ ...getRequestData(request), ...getFilterData(response) });
+		const requestData = { ...getRequestData(request), ...getFilterData(response) };
+		return routeConfig.controller(requestData, controllerOptions);
 	} else if (typeof routeConfig.controller === 'object') {
 		return routeConfig.controller;
 	}
 	return;
 };
 
-export default (routeConfig, options) => (request, response) => {
+export default (routeConfig, controllerOptions, serverConfig) => (request, response) => {
 	try {
-		const responseData = handleControllerResponse(routeConfig, request, response, options);
+		const responseData = handleControllerResponse(routeConfig, request, response, controllerOptions, serverConfig);
 		if (responseData instanceof Promise) {
 			responseData.then(
 				(data) => {
-					sendResponse(routeConfig, data, response, options);
+					sendResponse(routeConfig, data, response, serverConfig);
 				},
 				(error) => {
 					errorHandler(error);
@@ -40,7 +41,7 @@ export default (routeConfig, options) => (request, response) => {
 			);
 			return;
 		}
-		sendResponse(routeConfig, responseData, response, options);
+		sendResponse(routeConfig, responseData, response, serverConfig);
 	} catch (error) {
 		errorHandler(error);
 		response.status(GLOBAL_API_ERROR).json(error.message);
