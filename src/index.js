@@ -23,9 +23,9 @@ const NodeRestServer = (routeConfig, serverConfig = {}) => {
 		const controllerOptions = getControllerOptions(serverConfig);
 
 		Object.keys(routeConfig).forEach((value) => {
-            const data = routeConfig[value];
+			const data = routeConfig[value];
 			if (Array.isArray(data)) {
-				data.forEach(item => registerMethod(app, value, item, controllerOptions, serverConfig));
+				data.forEach((item) => registerMethod(app, value, item, controllerOptions, serverConfig));
 			} else {
 				registerMethod(app, value, data, controllerOptions, serverConfig);
 			}
@@ -48,7 +48,7 @@ const registerMethod = (app, value, data, controllerOptions, serverConfig) => {
 		logger.info('Registering route path:', method.toUpperCase(), uri);
 		app[method.toLowerCase()](uri, RouteProvider(data, controllerOptions, serverConfig));
 	}
-}
+};
 
 const nodeServer = (module.exports = NodeRestServer);
 nodeServer.NodeRestServer = NodeRestServer;
