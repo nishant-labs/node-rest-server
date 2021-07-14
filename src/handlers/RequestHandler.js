@@ -7,6 +7,7 @@ export const getRequestData = (request) => ({
 	queryParams: request.query,
 	getHeader: request.get,
 	headers: request.headers,
+	method: request.method,
 });
 
 export const getFilterData = (response) => ({

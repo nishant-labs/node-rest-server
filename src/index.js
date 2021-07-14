@@ -23,12 +23,11 @@ const NodeRestServer = (routeConfig, serverConfig = {}) => {
 		const controllerOptions = getControllerOptions(serverConfig);
 
 		Object.keys(routeConfig).forEach((value) => {
-			const data = routeConfig[value];
-			const uri = `${serverConfig.basePath || ''}${value}`;
-			if (typeof data.method === 'string') {
-				const method = String(data.method);
-				logger.info('Registering route path:', method.toUpperCase(), uri);
-				app[method.toLowerCase()](uri, RouteProvider(data, controllerOptions, serverConfig));
+            const data = routeConfig[value];
+			if (Array.isArray(data)) {
+				data.forEach(item => registerMethod(app, value, item, controllerOptions, serverConfig));
+			} else {
+				registerMethod(app, value, data, controllerOptions, serverConfig);
 			}
 		});
 
@@ -41,6 +40,15 @@ const NodeRestServer = (routeConfig, serverConfig = {}) => {
 		logger.error(error);
 	}
 };
+
+const registerMethod = (app, value, data, controllerOptions, serverConfig) => {
+	const uri = `${serverConfig.basePath || ''}${value}`;
+	if (typeof data.method === 'string') {
+		const method = String(data.method);
+		logger.info('Registering route path:', method.toUpperCase(), uri);
+		app[method.toLowerCase()](uri, RouteProvider(data, controllerOptions, serverConfig));
+	}
+}
 
 const nodeServer = (module.exports = NodeRestServer);
 nodeServer.NodeRestServer = NodeRestServer;
