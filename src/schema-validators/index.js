@@ -4,8 +4,8 @@ import { ERROR } from '../constants/content';
 
 const commonResultProcessor = (result, type) => {
 	if (result !== true) {
-		const message = result.map(({ message }) => `\n${message}`);
-		throw Error([`${ERROR.VALIDATION_MESSAGE} ${type}`, ...message].join(''));
+		const formattedMessages = result.map(({ message }) => `\n${message}`);
+		throw Error([`${ERROR.VALIDATION_MESSAGE} ${type}`, ...formattedMessages].join(''));
 	}
 };
 
