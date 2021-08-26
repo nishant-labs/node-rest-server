@@ -28,7 +28,7 @@ const handleControllerResponse = (routeConfig, request, response, controllerOpti
 
 export default (routeConfig, controllerOptions, serverConfig) => (request, response) => {
 	try {
-		const responseData = handleControllerResponse(routeConfig, request, response, controllerOptions, serverConfig);
+		const responseData = handleControllerResponse(routeConfig, request, response, controllerOptions);
 		if (responseData instanceof Promise) {
 			responseData.then(
 				(data) => {
