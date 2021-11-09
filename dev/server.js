@@ -45,7 +45,7 @@ const testData = {
 			method: 'GET',
 			controller: () => ({
 				status: 500,
-				payload: 'get data',
+				payload: { data: 'get data' },
 			}),
 		},
 		{
@@ -53,7 +53,7 @@ const testData = {
 			controller: (requestData) => {
 				return {
 					status: 500,
-					payload: { requestData: JSON.stringify(requestData) },
+					payload: { requestData },
 				};
 			},
 		},
