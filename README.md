@@ -111,6 +111,23 @@ const routeConfig = {
 			return { status: 200, payload: { data: 'Data', dataFromDB } };
 		},
 	},
+	'/endpoint3': [
+		{
+			method: 'POST',
+			controller: async (requestData, { getDatabaseConnection }) => {
+				// requestData.method will be POST
+				const dataFromDB = await getDatabaseConnection();
+				return { status: 200, payload: { data: 'Data', dataFromDB } };
+			},
+		}, 
+		{
+			method: 'GET',
+			controller: async (requestData) => {
+				// requestData.method will be GET 
+				return { status: 200, payload: { data: 'Async data' } };
+			},
+		}
+	],
 	'/async/endpoint': {
 		method: 'POST',
 		controller: async (requestData) => {

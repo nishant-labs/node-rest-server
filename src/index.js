@@ -5,6 +5,16 @@ import { initPreProcessors } from './utils/ServerProcessor';
 import ErrorHandler from './handlers/ErrorHander';
 import { validateServerSettings } from './schema-validators';
 import { getControllerOptions } from './handlers/RequestHandler';
+import { hasUniqueMethods } from './utils/array';
+
+const registerMethod = (app, endpoint, endpointHandlerConfigItem, controllerOptions, serverConfig) => {
+	const uri = `${serverConfig.basePath || ''}${endpoint}`;
+	if (typeof endpointHandlerConfigItem.method === 'string') {
+		const method = String(endpointHandlerConfigItem.method);
+		logger.info('Registering route path:', method.toUpperCase(), uri);
+		app[method.toLowerCase()](uri, RouteProvider(endpointHandlerConfigItem, controllerOptions, serverConfig));
+	}
+};
 
 const NodeRestServer = (routeConfig, serverConfig = {}) => {
 	try {
@@ -22,13 +32,18 @@ const NodeRestServer = (routeConfig, serverConfig = {}) => {
 		MiddlewareProvider.registerStatusEndpoint(app);
 		const controllerOptions = getControllerOptions(serverConfig);
 
-		Object.keys(routeConfig).forEach((value) => {
-			const data = routeConfig[value];
-			const uri = `${serverConfig.basePath || ''}${value}`;
-			if (typeof data.method === 'string') {
-				const method = String(data.method);
-				logger.info('Registering route path:', method.toUpperCase(), uri);
-				app[method.toLowerCase()](uri, RouteProvider(data, controllerOptions, serverConfig));
+		Object.keys(routeConfig).forEach((endpoint) => {
+			const endpointHandlerConfigs = routeConfig[endpoint];
+			if (Array.isArray(endpointHandlerConfigs)) {
+				if (hasUniqueMethods(endpointHandlerConfigs)) {
+					endpointHandlerConfigs.forEach((endpointHandlerConfigItem) =>
+						registerMethod(app, endpoint, endpointHandlerConfigItem, controllerOptions, serverConfig),
+					);
+				} else {
+					logger.error('Multiple handlers for same http method found for endpoint : ', endpoint);
+				}
+			} else {
+				registerMethod(app, endpoint, endpointHandlerConfigs, controllerOptions, serverConfig);
 			}
 		});
 

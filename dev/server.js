@@ -40,15 +40,24 @@ const testData = {
 			throw Error('error');
 		},
 	},
-	'/data/name/:id': {
-		method: 'POST',
-		controller: (requestData) => {
-			return {
+	'/data/name/:id': [
+		{
+			method: 'GET',
+			controller: () => ({
 				status: 500,
-				payload: { requestData: JSON.stringify(requestData) },
-			};
+				payload: 'get data',
+			}),
 		},
-	},
+		{
+			method: 'POST',
+			controller: (requestData) => {
+				return {
+					status: 500,
+					payload: { requestData: JSON.stringify(requestData) },
+				};
+			},
+		},
+	],
 };
 
 const serverConfigs = {
