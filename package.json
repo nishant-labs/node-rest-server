@@ -51,7 +51,7 @@
 		"date-fns": "2.15.0",
 		"errorhandler": "1.5.1",
 		"express": "4.17.1",
-		"fastest-validator": "1.10.1"
+		"fastest-validator": "1.12.0"
 	},
 	"devDependencies": {
 		"@babel/core": "7.14.0",
