@@ -11,6 +11,7 @@ Get your own rest based nodejs server within minutes by just providing endpoints
 - Ready to use rest server in minutes.
 - Free from all boilerplate code for creating and managing the server, so that developer can focus on actual business logic.
 - Simple configuration to generate response data.
+- Supports all http methods along with async connections
 
 ## Where you can use
 
@@ -59,7 +60,7 @@ NodeRestServer(routeConfig);
 
 ## Sample
 
-[example](./example) directory provides a sample application explaining the use of this library.
+[example](https://github.com/nishant-labs/node-rest-server/tree/master/examples) directory provides a sample application explaining the use of this library.
 
 ## Route Configuration
 

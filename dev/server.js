@@ -40,6 +40,14 @@ const testData = {
 			throw Error('error');
 		},
 	},
+	'/remove/data': {
+		method: 'DELETE',
+		
+		controller: async ({ filter }) => {
+			console.log('Filter Data: ', JSON.stringify(filter));
+			return { status: 200 };
+		},
+	},
 	'/data/name/:id': [
 		{
 			method: 'GET',
