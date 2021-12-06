@@ -4,15 +4,16 @@ module.exports = {
 		node: true,
 	},
 	extends: 'eslint:recommended',
-	parser: 'babel-eslint',
+	parser: '@babel/eslint-parser',
 	parserOptions: {
 		ecmaVersion: 11,
+		requireConfigFile: false,
 		sourceType: 'module',
 	},
 	rules: {
 		indent: ['error', 'tab'],
 		'linebreak-style': ['error', 'unix'],
-		quotes: ['error', 'single', { 'avoidEscape': true }],
+		quotes: ['error', 'single', { avoidEscape: true }],
 		semi: ['error', 'always'],
 		'comma-dangle': ['error', 'always-multiline'],
 	},
