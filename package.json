@@ -1,6 +1,6 @@
 {
 	"name": "node-rest-server",
-	"version": "2.1.0",
+	"version": "3.0.0",
 	"description": "Configurable node rest server",
 	"main": "lib/index.js",
 	"module": "lib/index.esm.js",
@@ -46,13 +46,12 @@
 	},
 	"homepage": "https://github.com/nishant-labs/node-rest-server#readme",
 	"dependencies": {
-		"chalk": "4.1.1",
+		"chalk": "4.1.2",
 		"cors": "2.8.5",
-		"date-fns": "2.15.0",
+		"date-fns": "2.25.0",
 		"errorhandler": "1.5.1",
 		"express": "4.17.1",
-		"fastest-validator": "1.10.1",
-		"watch": "0.13.0"
+		"fastest-validator": "1.12.0"
 	},
 	"devDependencies": {
 		"@babel/core": "7.14.0",
@@ -63,15 +62,16 @@
 		"@babel/preset-env": "7.14.1",
 		"@babel/register": "7.13.16",
 		"@rollup/plugin-babel": "5.3.0",
-		"@rollup/plugin-node-resolve": "13.0.0",
+		"@rollup/plugin-node-resolve": "13.0.6",
 		"babel-eslint": "10.1.0",
 		"eslint": "7.26.0",
 		"eslint-loader": "4.0.2",
 		"husky": "5.2.0",
-		"lint-staged": "11.0.0",
-		"nodemon": "2.0.7",
+		"lint-staged": "11.2.6",
+		"nodemon": "2.0.15",
 		"npm-run-all": "4.1.5",
-		"prettier": "2.3.0",
-		"rollup": "2.47.0"
+		"prettier": "2.4.1",
+		"rollup": "2.59.0",
+		"watch": "0.13.0"
 	}
 }
