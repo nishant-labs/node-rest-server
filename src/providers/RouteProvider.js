@@ -4,15 +4,25 @@ import { getRequestData, getFilterData } from '../handlers/RequestHandler';
 import ResponseHandler from '../handlers/ResponseHandler';
 import { errorHandler } from '../utils/ErrorUtils';
 
+const publishResponse = (response, status, data) => {
+	if (status && data && Object.keys(data).length !== 0) {
+		response.status(status).json(data);
+	} else if (status && (!data || Object.keys(data).length === 0)) {
+		response.status(status).end();
+	} else {
+		response.end();
+	}
+};
+
 const sendResponse = (routeConfig, responseData, response, serverConfig) => {
 	const { status, data } = ResponseHandler.getResponseData(routeConfig, responseData, serverConfig);
 	logger.info('Response sent : ', JSON.stringify(data));
 	if (serverConfig.delay > 0) {
 		setTimeout(() => {
-			response.status(status).json(data);
+			publishResponse(response, status, data);
 		}, serverConfig.delay * 1000);
 	} else {
-		response.status(status).json(data);
+		publishResponse(response, status, data);
 	}
 };
 
@@ -36,7 +46,7 @@ export default (routeConfig, controllerOptions, serverConfig) => (request, respo
 				},
 				(error) => {
 					errorHandler(error);
-					response.status(GLOBAL_API_ERROR).json(error.message);
+					publishResponse(response, GLOBAL_API_ERROR, error.message);
 				},
 			);
 			return;
@@ -44,6 +54,6 @@ export default (routeConfig, controllerOptions, serverConfig) => (request, respo
 		sendResponse(routeConfig, responseData, response, serverConfig);
 	} catch (error) {
 		errorHandler(error);
-		response.status(GLOBAL_API_ERROR).json(error.message);
+		publishResponse(response, GLOBAL_API_ERROR, error.message);
 	}
 };

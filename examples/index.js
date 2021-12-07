@@ -38,6 +38,12 @@ const endpoints = {
 		method: 'GET',
 		controller: profileController,
 	},
+	'/remove': {
+		method: 'DELETE',
+		controller: () => {
+			return { status: 200 };
+		},
+	},
 };
 
 RestServer(endpoints);
