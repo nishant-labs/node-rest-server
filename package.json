@@ -45,7 +45,7 @@
 	"dependencies": {
 		"chalk": "4.1.2",
 		"cors": "2.8.5",
-		"date-fns": "2.25.0",
+		"date-fns": "2.26.0",
 		"errorhandler": "1.5.1",
 		"express": "4.17.1",
 		"fastest-validator": "1.12.0"
