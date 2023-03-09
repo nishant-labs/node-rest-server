@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import DateFormat from 'date-fns/format';
+import DateFormat from 'date-fns/format/index.js';
 
 const dateTime = () => DateFormat(Date.now(), 'dd-MM-yyyy HH-mm-ss');
 const appName = () => '[node-rest-server]';

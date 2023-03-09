@@ -1,5 +1,5 @@
-const fs = require('fs');
-const path = require('path');
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 
 const testData = {
 	'/test/data/name': {
@@ -91,24 +91,24 @@ const serverConfigs = {
 	},
 };
 
-const Start = () => {
-	const NodeRestServer = require('../lib');
+const Start = async (file) => {
+	const { NodeRestServer } = await import(file);
 	NodeRestServer(testData, serverConfigs);
 };
 
 const getFile = (file, timeout) => {
-	const exists = fs.existsSync(file);
+	const exists = existsSync(file);
 	if (exists) {
-		Start();
+		Start(file);
 	} else {
 		const stopTimer = setInterval(function () {
-			const fileExists = fs.existsSync(file);
+			const fileExists = existsSync(file);
 			if (fileExists) {
 				clearInterval(stopTimer);
-				Start();
+				Start(file);
 			}
 		}, timeout);
 	}
 };
 
-getFile(path.join(__dirname, '../lib/index.js'), 1000);
+getFile(join(process.cwd(), '/lib/esm/index.js'), 1000);
