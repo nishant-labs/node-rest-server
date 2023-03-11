@@ -57,5 +57,4 @@ const NodeRestServer = (routeConfig, serverConfig = {}) => {
 	}
 };
 
-const nodeServer = (module.exports = NodeRestServer);
-nodeServer.NodeRestServer = NodeRestServer;
+export { NodeRestServer, NodeRestServer as default };

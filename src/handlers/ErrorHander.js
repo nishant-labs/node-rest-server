@@ -1,4 +1,4 @@
-const errorHandler = require('errorhandler');
+import errorHandler from 'errorhandler';
 import { logger } from '../utils/Logger';
 
 export default class ErrorHandler {

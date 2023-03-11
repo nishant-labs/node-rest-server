@@ -2,7 +2,6 @@
 	"name": "examples",
 	"version": "2.0.0",
 	"description": "node-rest-server examples",
-	"main": "index.js",
 	"type": "module",
 	"scripts": {
 		"start": "node index.js"
