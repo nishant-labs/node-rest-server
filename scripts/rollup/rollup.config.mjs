@@ -8,18 +8,11 @@ const isExternal = (moduleName) => dependencies.findIndex((dependency) => module
 
 export default {
 	input: path.join(process.cwd(), 'src/index.js'),
-	output: [
-		{
-			file: path.join(process.cwd(), pkg.exports['./lib']),
-			format: 'cjs',
-			exports: 'named',
-		},
-		{
-			file: path.join(process.cwd(), pkg.exports['./esm']),
-			format: 'esm',
-			exports: 'named',
-		},
-	],
+	output: {
+		file: path.join(process.cwd(), pkg.exports['.']),
+		format: 'esm',
+		exports: 'named',
+	},
 	external: isExternal,
 	plugins: [
 		resolve(),

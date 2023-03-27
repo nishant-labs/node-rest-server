@@ -4,6 +4,7 @@
 		"@babel/plugin-proposal-object-rest-spread",
 		"@babel/transform-arrow-functions",
 		"@babel/plugin-transform-classes",
-		"@babel/plugin-transform-template-literals"
+		"@babel/plugin-transform-template-literals",
+		"@babel/plugin-syntax-import-assertions"
 	]
 }
