@@ -123,7 +123,7 @@ const routeConfig = {
 		}, 
 		{
 			method: 'GET',
-			controller: async (requestData) => {
+			controller: (requestData) => {
 				// requestData.method will be GET 
 				return { status: 200, payload: { data: 'Async data' } };
 			},
@@ -131,7 +131,7 @@ const routeConfig = {
 	],
 	'/async/endpoint': {
 		method: 'POST',
-		controller: async (requestData) => {
+		controller: (requestData) => {
 			// Some DB/api calls
 			return { status: 200, payload: { data: 'Async data' } };
 		},

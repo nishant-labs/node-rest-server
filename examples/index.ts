@@ -1,5 +1,8 @@
+/* eslint-disable */
+// @ts-ignore
 import RestServer from 'node-rest-server';
 
+// @ts-ignore
 const nameController = (requestData) => {
 	const { gender, name } = requestData.body;
 	return {
