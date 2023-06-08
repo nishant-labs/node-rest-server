@@ -1,11 +1,13 @@
+import { Express } from 'express';
 import { logger } from '../utils/Logger';
 import { getRequestData } from '../handlers/RequestHandler';
 import { errorHandler } from '../utils/ErrorUtils';
+import { ServerConfiguration } from '../types/config.types';
 
 export default class MiddlewareProvider {
-	static registerRequestLogger(app) {
+	static registerRequestLogger(app: Express) {
 		logger.debug('Registering request logger');
-		app.use((request, response, next) => {
+		app.use((request, _response, next) => {
 			const data = getRequestData(request);
 			logger.info('Request URL : ', JSON.stringify(data.url));
 			logger.info('Request headers : ', JSON.stringify(data.headers));
@@ -14,7 +16,7 @@ export default class MiddlewareProvider {
 		});
 	}
 
-	static registerFilters(app, serverConfig) {
+	static registerFilters(app: Express, serverConfig: ServerConfiguration) {
 		logger.debug('Registering global filter');
 		app.use((request, response, next) => {
 			const data = getRequestData(request);
@@ -22,7 +24,7 @@ export default class MiddlewareProvider {
 				logger.info('Executing filter...');
 				const filterData = serverConfig.filter(data);
 				if (filterData instanceof Promise) {
-					filterData.then((filterDataResponse) => {
+					filterData.then((filterDataResponse: unknown) => {
 						response.locals = filterDataResponse || {};
 						next();
 					}, errorHandler);
@@ -34,9 +36,10 @@ export default class MiddlewareProvider {
 		});
 	}
 
-	static registerStatusEndpoint(app) {
+	static registerStatusEndpoint(app: Express) {
 		logger.debug('Registering /status endpoint to get routes information');
-		app.get('/status', (request, response) => {
+		app.get('/status', (_request, response) => {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 			response.send(app._router.stack);
 		});
 	}
