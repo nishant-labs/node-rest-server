@@ -3,9 +3,9 @@ import { ControllerOptions } from './config.types';
 
 export type RouteMethod = 'all' | 'get' | 'post' | 'put' | 'delete' | 'patch' | 'options' | 'head';
 
-export interface Request {
+interface Request {
 	url: string;
-	body: ExpressRequest['body'];
+	body: unknown;
 	pathParams: ExpressRequest['params'];
 	queryParams: ExpressRequest['query'];
 	getHeader: (name: string) => string | undefined;
@@ -17,7 +17,7 @@ export interface FilterData {
 	filter: Locals;
 }
 
-export interface HttpRequest extends Request, FilterData {}
+export interface HttpRequest extends Request, Partial<FilterData> {}
 
 export interface ControllerResponse {
 	status?: number;
@@ -25,10 +25,12 @@ export interface ControllerResponse {
 	[key: string]: unknown;
 }
 
+export type ControllerFunc = (requestData: HttpRequest, controllerOptions: ControllerOptions) => ControllerResponse | Promise<ControllerResponse>;
+
 export interface RouteConfigItem {
 	method: Lowercase<RouteMethod> | Uppercase<RouteMethod>;
 	status?: number;
-	controller: ((requestData: HttpRequest, controllerOptions: ControllerOptions) => ControllerResponse | Promise<ControllerResponse>) | ControllerResponse;
+	controller: ControllerFunc;
 }
 
 export type RouteConfiguration = Record<string, RouteConfigItem | Array<RouteConfigItem>>;

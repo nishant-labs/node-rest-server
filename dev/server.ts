@@ -1,15 +1,20 @@
-import NodeRestServer, { HttpRequest, ControllerOptions, RouteConfiguration, ServerConfiguration, Request } from '../lib/index.js';
+import NodeRestServer, { HttpRequest, ControllerOptions, RouteConfiguration, ServerConfiguration } from '../lib/index.js';
+
+interface MyData {
+	gender: string;
+	name: string;
+}
 
 const testData: RouteConfiguration = {
 	'/test/data/name': {
 		method: 'POST',
 		status: 200,
 		controller: (requestData: HttpRequest) => {
-			const { gender, name } = requestData.body as Record<string, unknown>;
+			const { gender, name } = requestData.body as MyData;
 			return {
 				status: 200,
 				payload: {
-					name: `Welcome ${gender === 'male' ? 'Mr' : 'Miss'} ${(name as string) ?? 'Anonymous'}`,
+					name: `Welcome ${gender === 'male' ? 'Mr' : 'Miss'} ${name ?? 'Anonymous'}`,
 					Age: 28,
 				},
 			};
@@ -18,8 +23,8 @@ const testData: RouteConfiguration = {
 	'/test/data/data': {
 		method: 'GET',
 		status: 200,
-		controller: async (requestData: HttpRequest, options: ControllerOptions) => {
-			const { getDatabaseConnection } = options;
+		controller: async (requestData: HttpRequest, controllerOptions: ControllerOptions) => {
+			const { getDatabaseConnection } = controllerOptions;
 			let dbData;
 			if (getDatabaseConnection !== undefined) {
 				dbData = await getDatabaseConnection(requestData);
@@ -80,13 +85,13 @@ const serverConfigs: ServerConfiguration = {
 	getDatabaseConnection: async () => {
 		return Promise.resolve('me');
 	},
-	filter: (requestData: Request) => {
+	filter: (requestData: HttpRequest) => {
 		let isChecked = true;
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-		if (requestData.body.name === 'test') {
+		const { name } = requestData.body as MyData;
+		if (name === 'test') {
 			isChecked = false;
 		}
-		return { data: 'data calculated for each request', isChecked };
+		return Promise.resolve({ data: 'data calculated for each request', isChecked });
 	},
 	cors: {
 		origin: '*',
