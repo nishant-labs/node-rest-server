@@ -1,6 +1,6 @@
 import { CorsOptions } from 'cors';
 import { ValidationError } from 'fastest-validator';
-import { Request } from './route.types';
+import { HttpRequest } from './route.types';
 
 export type LoggerLevel = 'log' | 'info' | 'warn' | 'debug' | 'error' | 'trace';
 export type LoggerColor = 'green' | 'gray' | 'yellow' | 'red';
@@ -10,10 +10,11 @@ export interface LoggerConfiguration {
 	debug: boolean;
 }
 
-export type DatabaseConnection = (requestData: Request) => unknown | Promise<unknown>;
+export type DatabaseConnectionFunc = (requestData: HttpRequest) => Promise<unknown>;
+export type FilterFunc = (requestData: HttpRequest) => Promise<unknown>;
 
 export interface ControllerOptions {
-	getDatabaseConnection?: DatabaseConnection;
+	getDatabaseConnection?: DatabaseConnectionFunc;
 }
 
 export interface ServerConfiguration extends ControllerOptions {
@@ -21,7 +22,7 @@ export interface ServerConfiguration extends ControllerOptions {
 	port?: number;
 	delay?: number;
 	logger?: boolean | LoggerConfiguration;
-	filter?: (requestData: Request) => unknown | Promise<unknown>;
+	filter?: FilterFunc;
 	cors?: CorsOptions;
 }
 

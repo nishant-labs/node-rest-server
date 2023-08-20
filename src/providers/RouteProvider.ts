@@ -37,7 +37,6 @@ const handleControllerResponse = (
 ): ControllerResponse | Promise<ControllerResponse> => {
 	if (typeof routeConfig.controller === 'function') {
 		const requestData = { ...getRequestData(request), ...getFilterData(response) };
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 		return routeConfig.controller(requestData, controllerOptions);
 	} else if (typeof routeConfig.controller === 'object') {
 		return routeConfig.controller;

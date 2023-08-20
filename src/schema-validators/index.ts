@@ -13,7 +13,6 @@ const commonResultProcessor = (result: ValidatorResponse, type: string) => {
 
 export const validateServerSettings = (serverConfig?: ServerConfiguration) => {
 	logger.info('Validating Server settings');
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
 	const validationStatus: ValidatorResponse = serverSettingsValidator(serverConfig);
 	commonResultProcessor(validationStatus, 'server settings');
 };
