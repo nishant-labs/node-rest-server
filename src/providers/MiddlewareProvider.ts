@@ -10,8 +10,8 @@ export default class MiddlewareProvider {
 		app.use((request, _response, next) => {
 			const data = getRequestData(request);
 			logger.info('Request URL : ', JSON.stringify(data.url));
-			logger.info('Request headers : ', JSON.stringify(data.headers));
-			logger.info('Request body : ', JSON.stringify(data.body));
+			logger.debug('Request headers : ', JSON.stringify(data.headers));
+			logger.debug('Request body : ', JSON.stringify(data.body));
 			next();
 		});
 	}
@@ -39,8 +39,8 @@ export default class MiddlewareProvider {
 	static registerStatusEndpoint(app: Express) {
 		logger.debug('Registering /status endpoint to get routes information');
 		app.get('/status', (_request, response) => {
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-			response.send(app._router.stack);
+			const { stack } = app._router as Record<string, Array<string>>;
+			response.send(stack);
 		});
 	}
 }

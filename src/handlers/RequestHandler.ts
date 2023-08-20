@@ -1,11 +1,10 @@
 import { Request as ExpressRequest, Response } from 'express';
 import { extractIfAvailable } from '../utils/object';
 import { ControllerOptions, ServerConfiguration } from '../types/config.types';
-import { FilterData, Request, RouteMethod } from '../types/route.types';
+import { FilterData, HttpRequest, RouteMethod } from '../types/route.types';
 
-export const getRequestData = (request: ExpressRequest): Request => ({
+export const getRequestData = (request: ExpressRequest): HttpRequest => ({
 	url: `${request.protocol}://${request.hostname}${request.originalUrl}`,
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 	body: request.body,
 	pathParams: request.params,
 	queryParams: request.query,
