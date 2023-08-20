@@ -16,4 +16,4 @@ const getFile = (file: string, timeout: number) => {
 	}
 };
 
-getFile(join(process.cwd(), '/lib/index.js'), 1000);
+getFile(join(process.cwd(), '/lib/index.mjs'), 1000);

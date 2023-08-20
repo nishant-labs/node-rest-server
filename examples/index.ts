@@ -1,10 +1,12 @@
-/* eslint-disable */
-// @ts-ignore
-import RestServer from 'node-rest-server';
+import RestServer, { HttpRequest, RouteConfiguration } from 'node-rest-server';
 
-// @ts-ignore
-const nameController = (requestData) => {
-	const { gender, name } = requestData.body;
+interface MyData {
+	gender: string;
+	name: string;
+}
+
+const nameController = (requestData: HttpRequest) => {
+	const { gender, name } = requestData.body as MyData;
 	return {
 		status: 200,
 		payload: {
@@ -26,7 +28,7 @@ const profileController = async () => {
 	};
 };
 
-const endpoints = {
+const endpoints: RouteConfiguration = {
 	'/name': {
 		method: 'POST',
 		status: 200,
