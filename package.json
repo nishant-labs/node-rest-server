@@ -3,8 +3,8 @@
 	"version": "4.0.0-2",
 	"description": "Configurable node rest server",
 	"exports": {
-		".": "./lib/index.js",
-		"./lib": "./lib/index.js"
+		".": "./lib/index.mjs",
+		"./lib": "./lib/index.mjs"
 	},
 	"types": "./lib/index.d.ts",
 	"type": "module",
