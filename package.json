@@ -6,10 +6,11 @@
 		".": "./lib/index.mjs",
 		"./lib": "./lib/index.mjs"
 	},
-	"types": "./lib/index.d.ts",
+	"types": "./lib/index.d.mts",
 	"type": "module",
 	"scripts": {
 		"start": "run-p dev:*",
+		"start:example": "npm --prefix ./examples start",
 		"local": "",
 		"build": "rollup --config scripts/rollup/rollup.config.ts --configPlugin typescript",
 		"dev:watch": "npm run build -- --watch",

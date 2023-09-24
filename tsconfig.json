@@ -110,5 +110,6 @@
   "ts-node": {
     "esm": true,
     "experimentalSpecifierResolution": "node",
+    "traceResolution": true
   }
 }

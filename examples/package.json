@@ -4,11 +4,11 @@
 	"description": "node-rest-server examples",
 	"type": "module",
 	"scripts": {
-		"start": "node index.js"
+		"start": "node --loader ts-node/esm index.ts"
 	},
 	"author": "Nishant Kumar Sinha",
 	"license": "ISC",
 	"dependencies": {
-		"node-rest-server": "4.0.0-2"
+		"node-rest-server": "4.0.0-3"
 	}
 }

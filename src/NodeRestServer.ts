@@ -21,7 +21,7 @@ const registerMethod = (app: Express, endpoint: string, endpointHandlerConfigIte
 	}
 };
 
-const NodeRestServer = (routeConfig: RouteConfiguration, serverConfig: ServerConfiguration = {}) => {
+export function NodeRestServer(routeConfig: RouteConfiguration, serverConfig: ServerConfiguration = {}) {
 	try {
 		validateServerSettings(serverConfig);
 		logger.info('Loading resources and starting server');
@@ -58,6 +58,6 @@ const NodeRestServer = (routeConfig: RouteConfiguration, serverConfig: ServerCon
 	} catch (error: unknown) {
 		logger.error(error as string);
 	}
-};
+}
 
-export { NodeRestServer, NodeRestServer as default };
+export default NodeRestServer;
