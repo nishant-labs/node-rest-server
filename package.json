@@ -1,20 +1,21 @@
 {
 	"name": "node-rest-server",
-	"version": "4.0.0-3",
+	"version": "4.0.0-4",
 	"description": "Configurable node rest server",
 	"exports": {
 		".": "./lib/index.mjs",
 		"./lib": "./lib/index.mjs"
 	},
-	"types": "./lib/index.d.ts",
+	"types": "./lib/index.d.mts",
 	"type": "module",
 	"scripts": {
 		"start": "run-p dev:*",
+		"start:example": "npm --prefix ./examples start",
 		"local": "",
 		"build": "rollup --config scripts/rollup/rollup.config.ts --configPlugin typescript",
 		"dev:watch": "npm run build -- --watch",
 		"dev:server": "node --loader ts-node/esm dev/index.ts",
-		"lint": "eslint src/**/* dev/**/* examples/index.ts",
+		"lint": "eslint src/**/* dev/**/*",
 		"lint:fix": "npm run lint -- --fix",
 		"format": "prettier src/**/* dev/**/* examples/index.ts --check",
 		"format:fix": "prettier src/**/* dev/**/* examples/index.ts --write",
