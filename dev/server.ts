@@ -1,4 +1,4 @@
-import NodeRestServer, { HttpRequest, ControllerOptions, RouteConfiguration, ServerConfiguration } from '../lib';
+import NodeRestServer, { HttpRequest, ControllerOptions, RouteConfiguration, ServerConfiguration } from '../lib/index.mjs';
 
 interface MyData {
 	gender: string;

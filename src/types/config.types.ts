@@ -10,11 +10,11 @@ export interface LoggerConfiguration {
 	debug: boolean;
 }
 
-export type DatabaseConnectionFunc = (requestData: HttpRequest) => Promise<unknown>;
-export type FilterFunc = (requestData: HttpRequest) => Promise<unknown>;
+export declare function DatabaseConnectionFunc(requestData: HttpRequest): Promise<unknown>;
+export declare function FilterFunc(requestData: HttpRequest): Promise<unknown>;
 
 export interface ControllerOptions {
-	getDatabaseConnection?: DatabaseConnectionFunc;
+	getDatabaseConnection?: typeof DatabaseConnectionFunc;
 }
 
 export interface ServerConfiguration extends ControllerOptions {
@@ -22,7 +22,7 @@ export interface ServerConfiguration extends ControllerOptions {
 	port?: number;
 	delay?: number;
 	logger?: boolean | LoggerConfiguration;
-	filter?: FilterFunc;
+	filter?: typeof FilterFunc;
 	cors?: CorsOptions;
 }
 

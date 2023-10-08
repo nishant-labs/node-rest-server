@@ -25,12 +25,12 @@ export interface ControllerResponse {
 	[key: string]: unknown;
 }
 
-export type ControllerFunc = (requestData: HttpRequest, controllerOptions: ControllerOptions) => ControllerResponse | Promise<ControllerResponse>;
+export declare function ControllerFunc(requestData: HttpRequest, controllerOptions: ControllerOptions): ControllerResponse | Promise<ControllerResponse>;
 
 export interface RouteConfigItem {
 	method: Lowercase<RouteMethod> | Uppercase<RouteMethod>;
 	status?: number;
-	controller: ControllerFunc;
+	controller: typeof ControllerFunc;
 }
 
 export type RouteConfiguration = Record<string, RouteConfigItem | Array<RouteConfigItem>>;
