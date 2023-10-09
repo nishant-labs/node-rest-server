@@ -6,6 +6,8 @@ Configuration only node rest server
 
 Get your own rest based nodejs server within minutes by just providing endpoints and controller.
 
+> Repo is migrated to publish module js bundle along with typescript typings.
+
 ## Features
 
 - Ready to use rest server in minutes.
