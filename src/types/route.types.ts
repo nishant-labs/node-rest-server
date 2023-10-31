@@ -22,6 +22,7 @@ export interface HttpRequest extends Request, Partial<FilterData> {}
 export interface ControllerResponse {
 	status?: number;
 	payload?: unknown;
+	headers?: Record<string, string>;
 	[key: string]: unknown;
 }
 
@@ -30,6 +31,7 @@ export declare function ControllerFunc(requestData: HttpRequest, controllerOptio
 export interface RouteConfigItem {
 	method: Lowercase<RouteMethod> | Uppercase<RouteMethod>;
 	status?: number;
+	headers?: Record<string, string>;
 	controller: typeof ControllerFunc;
 }
 

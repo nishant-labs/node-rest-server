@@ -1,3 +1,4 @@
+import * as http from 'http';
 import express, { Express } from 'express';
 import { RouteProvider, MiddlewareProvider } from './providers/index';
 import { initializeLogger, logger } from './utils/Logger';
@@ -7,7 +8,7 @@ import { validateServerSettings } from './schema-validators/index';
 import { getControllerOptions } from './handlers/RequestHandler';
 import { hasUniqueMethods } from './utils/array';
 import { RouteConfigItem, RouteConfiguration } from './types/route.types';
-import { ServerConfiguration, ControllerOptions } from './types/config.types';
+import { ServerConfiguration, ControllerOptions, RestServer } from './types/config.types';
 
 const registerMethod = (app: Express, endpoint: string, endpointHandlerConfigItem: RouteConfigItem, controllerOptions: ControllerOptions, serverConfig: ServerConfiguration) => {
 	const uri = `${serverConfig.basePath || ''}${endpoint}`;
@@ -21,7 +22,8 @@ const registerMethod = (app: Express, endpoint: string, endpointHandlerConfigIte
 	}
 };
 
-export function NodeRestServer(routeConfig: RouteConfiguration, serverConfig: ServerConfiguration = {}) {
+export function NodeRestServer(routeConfig: RouteConfiguration, serverConfig: ServerConfiguration = {}): RestServer {
+	let server: http.Server;
 	try {
 		validateServerSettings(serverConfig);
 		logger.info('Loading resources and starting server');
@@ -52,12 +54,32 @@ export function NodeRestServer(routeConfig: RouteConfiguration, serverConfig: Se
 
 		ErrorHandler.registerDevHandler(app);
 
-		app.listen(app.get('port'), () => {
+		server = app.listen(app.get('port'), () => {
 			logger.info('Server started listening on port', app.get('port') as string);
 		});
 	} catch (error: unknown) {
 		logger.error(error as string);
 	}
+	return {
+		close: (forced: boolean) =>
+			new Promise<Error | undefined>((resolve): void => {
+				if (!server) {
+					resolve(new Error('Server instance not found'));
+				}
+
+				if (forced) {
+					server.closeIdleConnections();
+					server.closeAllConnections();
+				}
+				server.close(resolve);
+			}),
+		addListener: (event, listener) => {
+			if (!server) {
+				return;
+			}
+			return server.addListener(event, listener);
+		},
+	};
 }
 
 export default NodeRestServer;

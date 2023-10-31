@@ -14,13 +14,13 @@ const getMessage = (type: LoggerLevel, message: string[]) => ({
 	appName: appName(),
 	level: type.toUpperCase(),
 	timestamp: dateTime(),
-	message: message.join(' '),
+	userMessage: message.join(' '),
 });
 
 const print = (color: LoggerColor, type: LoggerLevel, ...message: string[]) => {
 	if (isEnabled) {
-		const jsonMessage = getMessage(type, message);
-		const formattedLog = chalk[color](jsonMessage.appName, '-', jsonMessage.timestamp, '-', jsonMessage.level, '\t-', jsonMessage.message);
+		const { appName, level, timestamp, userMessage } = getMessage(type, message);
+		const formattedLog = chalk[color](appName, '-', timestamp, '-', level.padEnd(5), '-', userMessage);
 		console[type](formattedLog);
 	}
 };

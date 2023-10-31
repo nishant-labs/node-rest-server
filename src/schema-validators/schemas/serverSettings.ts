@@ -17,6 +17,11 @@ export default {
 			integer: true,
 			default: 8000,
 		},
+		headers: {
+			type: 'multi',
+			rules: [{ type: 'object' }, { type: 'function' }],
+			optional: true,
+		},
 		delay: {
 			type: 'number',
 			positive: true,
