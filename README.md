@@ -53,6 +53,7 @@ const routeConfig = {
 	'/api1': {
 		method: 'GET',
 		status: 200,
+		header: { 'x-data': 'value' },
 		controller: () => 'Data',
 	},
 };
@@ -73,21 +74,23 @@ A route configuration is an object with key(_route path_) value(_route options_)
 
 ### Route Options
 
-| Name                | Type               | Default | Description                                                                                                                                                                                                      |
-| :------------------ | :----------------- | :------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| method              | `String`           | `GET`   | Method defines the type of request controller will handle                                                                                                                                                        |
-| controller          | `function\|Object` |         | This function/object will contain the business logic for the route path. For a function an object is passed which will contain request `url`, `body`, `params` and `header` and response of `filter` to be used. |
-| status (_optional_) | `String`           | `200`   | An appropriate HTTP response status code which server will give response for a request                                                                                                                           |
+| Name                 | Type                     | Default | Description                                                                                                                                                                                                      |
+| :------------------- | :----------------------- | :------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| method               | `String`                 | `GET`   | Method defines the type of request controller will handle                                                                                                                                                        |
+| headers (_optional_) | `Record<String, String>` |         | Specify static headers to be passed in response                                                                                                                                                                  |
+| status (_optional_)  | `String`                 | `200`   | An appropriate HTTP response status code which server will give response for a request                                                                                                                           |
+| controller           | `function\|Object`       |         | This function/object will contain the business logic for the route path. For a function an object is passed which will contain request `url`, `body`, `params` and `header` and response of `filter` to be used. |
 
 ### Controller method
 
 A controller can either return
 
-- an object with `status` and `payload`;
+- an object with `status`, `headers` and `payload`;
 
 ```js
 {
   status: 500, // should be a number
+	headers: { 'x-data': 'value' }, // optional header, should be a string record
   payload: "Hello world" // user can send any valid json converted using JSON.stringify()
 }
 ```
@@ -105,6 +108,7 @@ const routeConfig = {
 	'/endpoint1': {
 		method: 'GET',
 		status: 200,
+		headers: { 'x-data': 'value' },
 		controller: () => 'Data',
 	},
 	'/endpoint2': {
@@ -122,14 +126,14 @@ const routeConfig = {
 				const dataFromDB = await getDatabaseConnection();
 				return { status: 200, payload: { data: 'Data', dataFromDB } };
 			},
-		}, 
+		},
 		{
 			method: 'GET',
 			controller: (requestData) => {
-				// requestData.method will be GET 
+				// requestData.method will be GET
 				return { status: 200, payload: { data: 'Async data' } };
 			},
-		}
+		},
 	],
 	'/async/endpoint': {
 		method: 'POST',
@@ -145,15 +149,16 @@ const routeConfig = {
 
 This manages how the server will be configured
 
-| Name                  | Type              | Default     | Description                                                                                                                                                                                             |
-| :-------------------- | :---------------- | :---------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| basePath              | `String`          |             | Common prefix for all the routes                                                                                                                                                                        |
-| port                  | `Number`          | `8000`      | Port on which server will serve the content                                                                                                                                                             |
-| delay (sec)           | `Number`          | `0`         | Forcefully delay the response timing in seconds                                                                                                                                                         |
-| logger                | `Object\|Boolean` | `true`      | Enable logging for application, a boolean value will enable/disable all logging features, an object can be passed with property `enable` to toggle the logging and `debug` to enable/disable debug logs |
-| getDatabaseConnection | `function`        |             | Provides a mechanism to get DB connection using globally available method passed (supports `Promise`) to controller in second parameter.                                                                |
-| filter                | `function`        |             | Enable application level filter and pass returned value(supports `Promise`) to controller.                                                                                                              |
-| cors                  | `Object`          | `undefined` | Config should be as per [cors](https://github.com/expressjs/cors) package                                                                                                                               |
+| Name                  | Type               | Default     | Description                                                                                                                                                                                             |
+| :-------------------- | :----------------- | :---------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| basePath              | `String`           |             | Common prefix for all the routes                                                                                                                                                                        |
+| port                  | `Number`           | `8000`      | Port on which server will serve the content                                                                                                                                                             |
+| delay (sec)           | `Number`           | `0`         | Forcefully delay the response timing in seconds                                                                                                                                                         |
+| logger                | `Object\|Boolean`  | `true`      | Enable logging for application, a boolean value will enable/disable all logging features, an object can be passed with property `enable` to toggle the logging and `debug` to enable/disable debug logs |
+| getDatabaseConnection | `function`         |             | Provides a mechanism to get DB connection using globally available method passed (supports `Promise`) to controller in second parameter.                                                                |
+| filter                | `function`         |             | Enable application level filter and pass returned value(supports `Promise`) to controller.                                                                                                              |
+| cors                  | `Object`           | `undefined` | Config should be as per [cors](https://github.com/expressjs/cors) package                                                                                                                               |
+| headers               | `Object\|Function` | `undefined` | Any object with headers or a function which returns object with headers                                                                                                                                 |
 
 ### Server config Example
 
@@ -175,5 +180,10 @@ const serverConfig = {
   cors: {
     origin: '*'
   },
+	headers: () => {
+		return {
+			'x-data': 'my header',
+		};
+	},
 };
 ```

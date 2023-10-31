@@ -1,42 +1,26 @@
 import { Request as ExpressRequest, Response } from 'express';
-import { logger } from '../utils/Logger';
 import { GLOBAL_API_ERROR } from '../constants/global';
 import { getRequestData, getFilterData } from '../handlers/RequestHandler';
-import { extractResponseData } from '../handlers/ResponseHandler';
+import { publishErrorResponse, sendResponse } from '../handlers/ResponseHandler';
 import { errorHandler } from '../utils/ErrorUtils';
-import { ControllerResponse, RouteConfigItem } from '../types/route.types';
+import { ControllerResponse, HttpRequest, RouteConfigItem } from '../types/route.types';
 import { ServerConfiguration, ControllerOptions } from '../types/config.types';
 
-const publishResponse = (response: Response, status?: number, payload?: unknown) => {
-	if (status && payload && Object.keys(payload).length !== 0) {
-		response.status(status).json(payload);
-	} else if (status && (!payload || Object.keys(payload).length === 0)) {
-		response.status(status).end();
-	} else {
-		response.end();
-	}
-};
+const buildRequestData = (request: ExpressRequest, response: Response) => ({ ...getRequestData(request), ...getFilterData(response) });
 
-const sendResponse = (routeConfig: RouteConfigItem, responseData: ControllerResponse, response: Response, serverConfig: ServerConfiguration) => {
-	const { status, payload } = extractResponseData(routeConfig, responseData);
-	logger.debug('Response sent : ', JSON.stringify(payload));
-	if (serverConfig.delay && serverConfig.delay > 0) {
-		setTimeout(() => {
-			publishResponse(response, status, payload);
-		}, serverConfig.delay * 1000);
-	} else {
-		publishResponse(response, status, payload);
+const handleResponseHeaders = (serverConfig: ServerConfiguration, requestData: HttpRequest) => {
+	if (serverConfig.headers && typeof serverConfig.headers === 'function') {
+		return serverConfig.headers(requestData);
 	}
+	return serverConfig.headers;
 };
 
 const handleControllerResponse = (
 	routeConfig: RouteConfigItem,
-	request: ExpressRequest,
-	response: Response,
 	controllerOptions: ControllerOptions,
+	requestData: HttpRequest,
 ): ControllerResponse | Promise<ControllerResponse> => {
 	if (typeof routeConfig.controller === 'function') {
-		const requestData = { ...getRequestData(request), ...getFilterData(response) };
 		return routeConfig.controller(requestData, controllerOptions);
 	} else if (typeof routeConfig.controller === 'object') {
 		return routeConfig.controller;
@@ -46,22 +30,25 @@ const handleControllerResponse = (
 
 export default (routeConfig: RouteConfigItem, controllerOptions: ControllerOptions, serverConfig: ServerConfiguration) => (request: ExpressRequest, response: Response) => {
 	try {
-		const responseData = handleControllerResponse(routeConfig, request, response, controllerOptions);
+		const requestData = buildRequestData(request, response);
+		const serverConfigHeaders = handleResponseHeaders(serverConfig, requestData);
+		const responseData = handleControllerResponse(routeConfig, controllerOptions, requestData);
+		serverConfig.headers;
 		if (responseData instanceof Promise) {
 			responseData.then(
-				(data) => {
-					sendResponse(routeConfig, data, response, serverConfig);
+				(resolvedResponseData) => {
+					sendResponse(routeConfig, serverConfig, response, resolvedResponseData, serverConfigHeaders);
 				},
 				(error: Error) => {
 					errorHandler(error);
-					publishResponse(response, GLOBAL_API_ERROR, error.message);
+					publishErrorResponse(response, GLOBAL_API_ERROR, error.message);
 				},
 			);
 			return;
 		}
-		sendResponse(routeConfig, responseData, response, serverConfig);
+		sendResponse(routeConfig, serverConfig, response, responseData, serverConfigHeaders);
 	} catch (error: unknown) {
 		errorHandler(error);
-		publishResponse(response, GLOBAL_API_ERROR, (error as Error).message);
+		publishErrorResponse(response, GLOBAL_API_ERROR, (error as Error).message);
 	}
 };
