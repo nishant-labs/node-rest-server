@@ -50,6 +50,7 @@ jobs:
           registry-url: 'https://npm.pkg.github.com'
       - run: npm ci
       - run: npm run build
+      - run: npm config set @nishant-labs:registry https://npm.pkg.github.com
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

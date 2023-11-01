@@ -1,4 +1,4 @@
-import RestServer, { HttpRequest, RouteConfiguration } from 'node-rest-server';
+import RestServer, { HttpRequest, RouteConfiguration, ControllerResponse } from 'node-rest-server';
 
 interface MyData {
 	gender: string;
@@ -20,11 +20,14 @@ const addressController = () => {
 	return { address: 'This Lovely World' };
 };
 
-const profileController = async () => {
+const profileController = async (): Promise<ControllerResponse> => {
 	const data = await Promise.resolve({ profile: { name: 'Anonymous', address: 'This Lovely World' } });
 	return {
 		status: 200,
 		payload: data,
+		headers: {
+			'x-some-header': 'some value',
+		},
 	};
 };
 
