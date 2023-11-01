@@ -35,6 +35,9 @@ const testData: RouteConfiguration = {
 	'/test/data/async': {
 		method: 'GET',
 		status: 200,
+		headers: {
+			'Content-Type': 'text/html',
+		},
 		controller: async () => {
 			return await Promise.resolve({ payload: { place: 'The World is Async' } });
 		},
@@ -51,7 +54,12 @@ const testData: RouteConfiguration = {
 		method: 'DELETE',
 		controller: ({ filter }: HttpRequest) => {
 			console.log('Filter Data: ', JSON.stringify(filter));
-			return { status: 200 };
+			return {
+				status: 200,
+				headers: {
+					'x-some-date': Date.now().toLocaleString(),
+				},
+			};
 		},
 	},
 	'/data/name/:id': [
@@ -95,6 +103,11 @@ const serverConfigs: ServerConfiguration = {
 	},
 	cors: {
 		origin: '*',
+	},
+	headers: () => {
+		return {
+			'x-data': 'my header',
+		};
 	},
 };
 
