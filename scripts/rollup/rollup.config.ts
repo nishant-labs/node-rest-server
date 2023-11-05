@@ -5,7 +5,7 @@ import dts from 'rollup-plugin-dts';
 import pkg from '../../package.json' assert { type: 'json' };
 
 const dependencies = [...Object.keys(pkg.dependencies), ...Object.keys(pkg.devDependencies)];
-const isExternal = (moduleName: string) => dependencies.findIndex((dependency) => moduleName.startsWith(dependency)) !== -1;
+const isExternal = (moduleName: string) => moduleName.startsWith('node:') || dependencies.findIndex((dependency) => moduleName.startsWith(dependency)) !== -1;
 
 export default [
 	{
@@ -15,9 +15,7 @@ export default [
 			format: 'esm',
 		},
 		external: isExternal,
-		plugins: [
-			typescript({ tsconfig: './tsconfig.json' }),
-		],
+		plugins: [typescript({ tsconfig: './tsconfig.json' })],
 	},
 	{
 		input: path.join(process.cwd(), 'src/index.ts'),
@@ -25,6 +23,7 @@ export default [
 			file: path.join(process.cwd(), pkg.types),
 			format: 'es',
 		},
+		external: isExternal,
 		plugins: [dts()],
 	},
 ];
