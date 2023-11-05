@@ -54,4 +54,18 @@ const endpoints: RouteConfiguration = {
 	},
 };
 
-RestServer(endpoints);
+const serverInstance = RestServer(endpoints);
+
+// Test Server is started and endpoint is working
+void fetch('http://localhost:8000/profile')
+	.then((res) => res.json())
+	.then((data) => {
+		console.log('Testing api response: ' + JSON.stringify(data));
+	});
+
+// API to manually close server after 10 sec
+setTimeout(() => {
+	void serverInstance.close().then((error) => {
+		console.error(error);
+	});
+}, 10_000);

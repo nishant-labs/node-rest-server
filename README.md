@@ -25,10 +25,16 @@ Do you use for anything else!
 
 ## Installation
 
-This is a [Node.js](https://nodejs.org/en/) module available through the [npm registry](https://www.npmjs.com/package/node-rest-server). Install using below command.
+This is a [Node.js](https://nodejs.org/en/) module available through the [npm registry](https://www.npmjs.com/package/node-rest-server) and [github packages](https://github.com/nishant-labs/node-rest-server/pkgs/npm/node-rest-server). Install using below command.
 
+From NPM Registry
 ```bash
-npm install --save node-rest-server
+npm install --save node-rest-server 
+```
+
+From Github packages
+```bash
+npm install @nishant-labs/node-rest-server
 ```
 
 ## Importing
@@ -40,8 +46,11 @@ const NodeRestServer = require('node-rest-server'); // ES5
 // or
 import { NodeRestServer } from 'node-rest-server'; // If you like to use named export
 
-// call it as function and pass configuration
-NodeRestServer(routeConfig, serverConfig);
+// Invoke it as function and pass configuration
+const serverInstance = NodeRestServer(routeConfig, serverConfig);
+
+serverInstance.addListener('<event name>', () => void); // Add event listener
+serverInstance.close(); // explicitly close server
 ```
 
 ## Usage Example
