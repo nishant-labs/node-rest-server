@@ -1,6 +1,6 @@
 {
 	"name": "node-rest-server",
-	"version": "4.0.0-9",
+	"version": "4.0.0",
 	"description": "Configurable node rest server",
 	"exports": {
 		".": "./lib/index.mjs",
