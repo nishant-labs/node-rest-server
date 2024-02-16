@@ -5,7 +5,7 @@ import dts from 'rollup-plugin-dts';
 import pkg from '../../package.json' assert { type: 'json' };
 
 const dependencies = [...Object.keys(pkg.dependencies), ...Object.keys(pkg.devDependencies)];
-const isExternal = (moduleName: string) => moduleName.startsWith('node:') || dependencies.findIndex((dependency) => moduleName.startsWith(dependency)) !== -1;
+const isExternal = (moduleName) => moduleName.startsWith('node:') || dependencies.findIndex((dependency) => moduleName.startsWith(dependency)) !== -1;
 
 export default [
 	{

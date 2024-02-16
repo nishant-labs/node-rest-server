@@ -1,8 +1,8 @@
 import chalk from 'chalk';
-import DateFormat from 'date-fns/format/index.js';
+import { format } from 'date-fns';
 import { LoggerColor, LoggerLevel, ServerConfiguration } from '../types/config.types';
 
-const dateTime = () => DateFormat(Date.now(), 'dd-MM-yyyy HH-mm-ss');
+const dateTime = () => format(Date.now(), 'dd-MM-yyyy HH-mm-ss');
 const appName = () => '[node-rest-server]';
 
 let isDebug = false;
