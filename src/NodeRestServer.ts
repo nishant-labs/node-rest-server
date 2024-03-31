@@ -1,8 +1,9 @@
-import * as http from 'http';
+import * as http from 'node:http';
+import * as https from 'node:https';
 import express, { Express } from 'express';
 import { RouteProvider, MiddlewareProvider } from './providers/index';
 import { initializeLogger, logger } from './utils/Logger';
-import { initPreProcessors } from './utils/ServerProcessor';
+import { getServerReturnHandlers, initPreProcessors } from './utils/ServerProcessor';
 import ErrorHandler from './handlers/ErrorHander';
 import { validateServerSettings } from './schema-validators/index';
 import { getControllerOptions } from './handlers/RequestHandler';
@@ -23,7 +24,7 @@ const registerMethod = (app: Express, endpoint: string, endpointHandlerConfigIte
 };
 
 export function NodeRestServer(routeConfig: RouteConfiguration, serverConfig: ServerConfiguration = {}): RestServer {
-	let server: http.Server;
+	let serverInstance: http.Server;
 	try {
 		validateServerSettings(serverConfig);
 		logger.info('Loading resources and starting server');
@@ -54,32 +55,19 @@ export function NodeRestServer(routeConfig: RouteConfiguration, serverConfig: Se
 
 		ErrorHandler.registerDevHandler(app);
 
-		server = app.listen(app.get('port'), () => {
+		let server: https.Server<typeof http.IncomingMessage, typeof http.ServerResponse> | Express = app;
+		if (serverConfig.https) {
+			const httpsServer = https.createServer(serverConfig.https, app);
+			server = httpsServer;
+		}
+
+		serverInstance = server.listen(app.get('port'), () => {
 			logger.info('Server started listening on port', app.get('port') as string);
 		});
 	} catch (error: unknown) {
 		logger.error(error as string);
 	}
-	return {
-		close: (forced: boolean) =>
-			new Promise<Error | undefined>((resolve): void => {
-				if (!server) {
-					resolve(new Error('Server instance not found'));
-				}
-
-				if (forced) {
-					server.closeIdleConnections();
-					server.closeAllConnections();
-				}
-				server.close(resolve);
-			}),
-		addListener: (event, listener) => {
-			if (!server) {
-				return;
-			}
-			return server.addListener(event, listener);
-		},
-	};
+	return getServerReturnHandlers(serverInstance!);
 }
 
 export default NodeRestServer;

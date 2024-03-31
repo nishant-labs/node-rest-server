@@ -1,4 +1,4 @@
-import { IncomingMessage, RequestListener, Server, ServerResponse } from 'node:http';
+import { IncomingMessage, RequestListener, Server, ServerResponse, ServerOptions } from 'node:http';
 import { Socket } from 'node:net';
 import { Duplex } from 'node:stream';
 import { CorsOptions } from 'cors';
@@ -30,6 +30,7 @@ export interface ServerConfiguration extends ControllerOptions {
 	logger?: boolean | LoggerConfiguration;
 	filter?: typeof FilterFunc;
 	cors?: CorsOptions;
+	https?: ServerOptions<typeof IncomingMessage, typeof ServerResponse>;
 }
 
 export interface RestServer {
