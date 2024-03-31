@@ -9,9 +9,9 @@ export default class MiddlewareProvider {
 		logger.debug('Registering request logger');
 		app.use((request, _response, next) => {
 			const data = getRequestData(request);
-			logger.info('Request URL : ', JSON.stringify(data.url));
-			logger.debug('Request headers : ', JSON.stringify(data.headers));
-			logger.debug('Request body : ', JSON.stringify(data.body));
+			logger.info(`Request URL: ${data.method} ${new URL(data.url).pathname}`);
+			logger.debug('Request headers: ', JSON.stringify(data.headers));
+			logger.debug('Request body: ', JSON.stringify(data.body));
 			next();
 		});
 	}
