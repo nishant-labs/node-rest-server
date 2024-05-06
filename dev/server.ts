@@ -1,8 +1,8 @@
 import NodeRestServer, { HttpRequest, ControllerOptions, RouteConfiguration, ServerConfiguration } from '../lib/index.mjs';
 
 interface MyData {
-	gender: string;
-	name: string;
+	gender?: string;
+	name?: string;
 }
 
 const testData: RouteConfiguration = {

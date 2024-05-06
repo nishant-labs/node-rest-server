@@ -20,7 +20,7 @@
 		"format": "prettier src/**/* dev/**/* examples/index.ts --check",
 		"format:fix": "prettier src/**/* dev/**/* examples/index.ts --write",
 		"pre:commit": "lint-staged",
-		"prepare": "husky install && npm --prefix ./examples install"
+		"prepare": "husky && npm --prefix ./examples install"
 	},
 	"lint-staged": {
 		"src/**/*": [
@@ -50,32 +50,32 @@
 	"dependencies": {
 		"chalk": "5.3.0",
 		"cors": "2.8.5",
-		"date-fns": "3.3.1",
+		"date-fns": "3.6.0",
 		"errorhandler": "1.5.1",
-		"express": "4.18.2",
-		"fastest-validator": "1.17.0"
+		"express": "4.19.2",
+		"fastest-validator": "1.18.0"
 	},
 	"devDependencies": {
-		"@babel/core": "7.23.9",
-		"@babel/eslint-parser": "7.23.10",
-		"@babel/preset-typescript": "7.23.3",
+		"@babel/core": "7.24.5",
+		"@babel/preset-typescript": "7.24.1",
+		"@eslint/js": "9.2.0",
 		"@rollup/plugin-babel": "6.0.4",
 		"@rollup/plugin-node-resolve": "15.2.3",
 		"@rollup/plugin-typescript": "11.1.6",
 		"@types/cors": "2.8.17",
 		"@types/errorhandler": "1.5.3",
 		"@types/express": "4.17.21",
-		"@types/node": "20.11.19",
-		"@typescript-eslint/eslint-plugin": "7.0.1",
-		"@typescript-eslint/parser": "7.0.1",
-		"eslint": "8.56.0",
+		"@types/node": "20.12.8",
+		"eslint": "8.57.0",
 		"husky": "9.0.11",
 		"lint-staged": "15.2.2",
 		"npm-run-all": "4.1.5",
 		"prettier": "3.2.5",
-		"rollup": "4.11.0",
+		"rollup": "4.17.2",
 		"rollup-plugin-dts": "6.1.0",
 		"ts-node": "10.9.2",
-		"typescript": "5.3.3"
+		"tslib": "2.6.2",
+		"typescript": "5.4.5",
+		"typescript-eslint": "7.8.0"
 	}
 }

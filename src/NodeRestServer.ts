@@ -1,9 +1,10 @@
-import * as http from 'http';
+import * as http from 'node:http';
+import * as https from 'node:https';
 import express, { Express } from 'express';
 import { RouteProvider, MiddlewareProvider } from './providers/index';
 import { initializeLogger, logger } from './utils/Logger';
-import { initPreProcessors } from './utils/ServerProcessor';
-import ErrorHandler from './handlers/ErrorHander';
+import { getServerReturnHandlers, initPreProcessors } from './utils/ServerProcessor';
+import { registerDevErrorHandler } from './handlers/ErrorHander';
 import { validateServerSettings } from './schema-validators/index';
 import { getControllerOptions } from './handlers/RequestHandler';
 import { hasUniqueMethods } from './utils/array';
@@ -16,14 +17,13 @@ const registerMethod = (app: Express, endpoint: string, endpointHandlerConfigIte
 		const method = String(endpointHandlerConfigItem.method);
 		logger.info('Registering route path:', method.toUpperCase(), uri);
 
-		// @ts-ignore
+		// @ts-expect-error unsafe call to support dynamic generator
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 		app[method.toLowerCase()](uri, RouteProvider(endpointHandlerConfigItem, controllerOptions, serverConfig));
 	}
 };
 
 export function NodeRestServer(routeConfig: RouteConfiguration, serverConfig: ServerConfiguration = {}): RestServer {
-	let server: http.Server;
 	try {
 		validateServerSettings(serverConfig);
 		logger.info('Loading resources and starting server');
@@ -43,7 +43,9 @@ export function NodeRestServer(routeConfig: RouteConfiguration, serverConfig: Se
 			const endpointHandlerConfigs = routeConfig[endpoint];
 			if (Array.isArray(endpointHandlerConfigs)) {
 				if (hasUniqueMethods(endpointHandlerConfigs)) {
-					endpointHandlerConfigs.forEach((endpointHandlerConfigItem) => registerMethod(app, endpoint, endpointHandlerConfigItem, controllerOptions, serverConfig));
+					endpointHandlerConfigs.forEach((endpointHandlerConfigItem) => {
+						registerMethod(app, endpoint, endpointHandlerConfigItem, controllerOptions, serverConfig);
+					});
 				} else {
 					logger.error('Multiple handlers for same http method found for endpoint : ', endpoint);
 				}
@@ -52,34 +54,22 @@ export function NodeRestServer(routeConfig: RouteConfiguration, serverConfig: Se
 			}
 		});
 
-		ErrorHandler.registerDevHandler(app);
+		registerDevErrorHandler(app);
 
-		server = app.listen(app.get('port'), () => {
+		let server: https.Server | Express = app;
+		if (serverConfig.https) {
+			const httpsServer = https.createServer(serverConfig.https, app);
+			server = httpsServer;
+		}
+
+		const serverInstance: http.Server = server.listen(app.get('port'), () => {
 			logger.info('Server started listening on port', app.get('port') as string);
 		});
+		return getServerReturnHandlers(serverInstance);
 	} catch (error: unknown) {
 		logger.error(error as string);
+		return getServerReturnHandlers();
 	}
-	return {
-		close: (forced: boolean) =>
-			new Promise<Error | undefined>((resolve): void => {
-				if (!server) {
-					resolve(new Error('Server instance not found'));
-				}
-
-				if (forced) {
-					server.closeIdleConnections();
-					server.closeAllConnections();
-				}
-				server.close(resolve);
-			}),
-		addListener: (event, listener) => {
-			if (!server) {
-				return;
-			}
-			return server.addListener(event, listener);
-		},
-	};
 }
 
 export default NodeRestServer;
