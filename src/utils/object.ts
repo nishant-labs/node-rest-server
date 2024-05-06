@@ -8,11 +8,11 @@ export const extractIfAvailable = (object: ServerConfiguration, attributes: keyo
 	if (Array.isArray(attributes)) {
 		return attributes.reduce((result, attribute) => {
 			if (object[attribute]) {
-				// @ts-ignore
+				// @ts-expect-error result is aan object which contains attribute
 				result[attribute] = object[attribute];
 			}
 			return result;
-		}, {} as ControllerOptions);
+		}, {});
 	}
 
 	return {} as ControllerOptions;

@@ -27,7 +27,7 @@ export const initPreProcessors = (app: Express, serverConfig: ServerConfiguratio
 
 export const getServerReturnHandlers = (server?: http.Server) => {
 	return {
-		close: (forced: boolean) =>
+		close: (forced?: boolean) =>
 			new Promise<Error | undefined>((resolve): void => {
 				if (!server) {
 					resolve(new Error('Server instance not found'));

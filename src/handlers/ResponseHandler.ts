@@ -4,13 +4,13 @@ import { logger } from '../utils/Logger';
 import { ControllerResponse, RouteConfigItem } from '../types/route.types';
 
 interface FinalResponse {
-	status: number;
-	payload: unknown;
-	headers: Record<string, string>;
+	status?: number;
+	payload?: unknown;
+	headers?: Record<string, string>;
 }
 
-export const extractResponseData = (routeConfig: RouteConfigItem, controllerResponseData: ControllerResponse, serverConfigHeaders?: Record<string, string>): FinalResponse => {
-	const { status, payload, headers, ...userData } = controllerResponseData ?? {};
+export const extractResponseData = (routeConfig: RouteConfigItem, controllerResponseData: ControllerResponse = {}, serverConfigHeaders?: Record<string, string>): FinalResponse => {
+	const { status, payload, headers, ...userData } = controllerResponseData;
 	return {
 		status: status || routeConfig.status || 200,
 		payload: payload || userData,

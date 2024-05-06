@@ -1,4 +1,4 @@
-import { IncomingMessage, RequestListener, Server, ServerResponse, ServerOptions } from 'node:http';
+import { IncomingMessage, RequestListener, Server, ServerOptions } from 'node:http';
 import { Socket } from 'node:net';
 import { Duplex } from 'node:stream';
 import { CorsOptions } from 'cors';
@@ -7,7 +7,7 @@ import { HttpRequest } from './route.types';
 
 export type LoggerLevel = 'log' | 'info' | 'warn' | 'debug' | 'error' | 'trace';
 export type LoggerColor = 'green' | 'gray' | 'yellow' | 'red';
-type HttpServerInstance = Server<typeof IncomingMessage, typeof ServerResponse> | undefined;
+type HttpServerInstance = Server | undefined;
 
 export interface LoggerConfiguration {
 	enable: boolean;
@@ -30,25 +30,23 @@ export interface ServerConfiguration extends ControllerOptions {
 	logger?: boolean | LoggerConfiguration;
 	filter?: typeof FilterFunc;
 	cors?: CorsOptions;
-	https?: ServerOptions<typeof IncomingMessage, typeof ServerResponse>;
+	https?: ServerOptions;
 }
 
 export interface RestServer {
-	close: (forced: boolean) => Promise<Error | undefined>;
+	close: (forced?: boolean) => Promise<Error | undefined>;
 
 	// Extracted from node HTTP module
 	addListener(event: string, listener: (...args: unknown[]) => void): HttpServerInstance;
-	addListener(event: 'close', listener: () => void): HttpServerInstance;
+
+	addListener(event: 'close' | 'listening', listener: () => void): HttpServerInstance;
+	addListener(event: 'connect' | 'upgrade', listener: (req: InstanceType<typeof IncomingMessage>, socket: Duplex, head: Buffer) => void): HttpServerInstance;
+	addListener(event: 'checkContinue' | 'checkExpectation' | 'request', listener: RequestListener): HttpServerInstance;
+
 	addListener(event: 'connection', listener: (socket: Socket) => void): HttpServerInstance;
-	addListener(event: 'error', listener: (err: Error) => void): HttpServerInstance;
-	addListener(event: 'listening', listener: () => void): HttpServerInstance;
-	addListener(event: 'checkContinue', listener: RequestListener<typeof IncomingMessage, typeof ServerResponse>): HttpServerInstance;
-	addListener(event: 'checkExpectation', listener: RequestListener<typeof IncomingMessage, typeof ServerResponse>): HttpServerInstance;
-	addListener(event: 'clientError', listener: (err: Error, socket: Duplex) => void): HttpServerInstance;
-	addListener(event: 'connect', listener: (req: InstanceType<typeof IncomingMessage>, socket: Duplex, head: Buffer) => void): HttpServerInstance;
 	addListener(event: 'dropRequest', listener: (req: InstanceType<typeof IncomingMessage>, socket: Duplex) => void): HttpServerInstance;
-	addListener(event: 'request', listener: RequestListener<typeof IncomingMessage, typeof ServerResponse>): HttpServerInstance;
-	addListener(event: 'upgrade', listener: (req: InstanceType<typeof IncomingMessage>, socket: Duplex, head: Buffer) => void): HttpServerInstance;
+	addListener(event: 'clientError', listener: (err: Error, socket: Duplex) => void): HttpServerInstance;
+	addListener(event: 'error', listener: (err: Error) => void): HttpServerInstance;
 }
 
 export type ValidatorResponse = true | ValidationError[] | Promise<true | ValidationError[]>;

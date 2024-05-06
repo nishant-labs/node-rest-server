@@ -26,16 +26,26 @@ const print = (color: LoggerColor, type: LoggerLevel, ...message: string[]) => {
 };
 
 export const logger = {
-	log: (...message: string[]) => print('green', 'log', ...message),
-	info: (...message: string[]) => print('green', 'info', ...message),
-	warn: (...message: string[]) => print('yellow', 'warn', ...message),
+	log: (...message: string[]) => {
+		print('green', 'log', ...message);
+	},
+	info: (...message: string[]) => {
+		print('green', 'info', ...message);
+	},
+	warn: (...message: string[]) => {
+		print('yellow', 'warn', ...message);
+	},
 	debug: (...message: string[]) => {
 		if (isDebug) {
 			print('gray', 'debug', ...message);
 		}
 	},
-	error: (...message: string[]) => print('red', 'error', ...message),
-	trace: (...message: string[]) => print('red', 'trace', ...message),
+	error: (...message: string[]) => {
+		print('red', 'error', ...message);
+	},
+	trace: (...message: string[]) => {
+		print('red', 'trace', ...message);
+	},
 };
 
 export const initializeLogger = ({ logger }: ServerConfiguration) => {
