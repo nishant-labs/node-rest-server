@@ -1,11 +1,11 @@
-import RestServer, { HttpRequest, RouteConfiguration, ControllerResponse } from 'node-rest-server';
+import RestServer, { RouteConfiguration, ControllerResponse, ControllerFunc } from 'node-rest-server';
 
 interface MyData {
 	gender: string;
 	name: string;
 }
 
-const nameController = (requestData: HttpRequest) => {
+const nameController: typeof ControllerFunc = (requestData) => {
 	const { gender, name } = requestData.body as MyData;
 	return {
 		status: 200,
