@@ -8,4 +8,8 @@ export default tsEslint.config(eslint.configs.recommended, ...tsEslint.configs.s
 			tsconfigRootDir: import.meta.dirname,
 		},
 	},
+},
+{
+	files: ['**/*.js'],
+	...tsEslint.configs.disableTypeChecked,
 });

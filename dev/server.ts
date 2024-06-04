@@ -1,4 +1,4 @@
-import NodeRestServer, { HttpRequest, ControllerOptions, RouteConfiguration, ServerConfiguration } from '../lib/index.mjs';
+import NodeRestServer, { RouteConfiguration, ServerConfiguration } from '../lib/index.mjs';
 
 interface MyData {
 	gender?: string;
@@ -9,7 +9,7 @@ const testData: RouteConfiguration = {
 	'/test/data/name': {
 		method: 'POST',
 		status: 200,
-		controller: (requestData: HttpRequest) => {
+		controller: (requestData) => {
 			const { gender, name } = requestData.body as MyData;
 			return {
 				status: 200,
@@ -23,7 +23,7 @@ const testData: RouteConfiguration = {
 	'/test/data/data': {
 		method: 'GET',
 		status: 200,
-		controller: async (requestData: HttpRequest, controllerOptions: ControllerOptions) => {
+		controller: async (requestData, controllerOptions) => {
 			const { getDatabaseConnection } = controllerOptions;
 			let dbData;
 			if (getDatabaseConnection !== undefined) {
@@ -45,14 +45,14 @@ const testData: RouteConfiguration = {
 	'/test/data/async/error': {
 		method: 'GET',
 		status: 200,
-		controller: ({ filter }: HttpRequest) => {
+		controller: ({ filter }) => {
 			console.log('Filter Data: ', JSON.stringify(filter));
 			throw Error('error');
 		},
 	},
 	'/remove/data': {
 		method: 'DELETE',
-		controller: ({ filter }: HttpRequest) => {
+		controller: ({ filter }) => {
 			console.log('Filter Data: ', JSON.stringify(filter));
 			return {
 				status: 200,
@@ -72,7 +72,7 @@ const testData: RouteConfiguration = {
 		},
 		{
 			method: 'POST',
-			controller: (requestData: HttpRequest) => {
+			controller: (requestData) => {
 				return {
 					status: 500,
 					payload: { requestData },
@@ -93,7 +93,7 @@ const serverConfigs: ServerConfiguration = {
 	getDatabaseConnection: async () => {
 		return Promise.resolve('me');
 	},
-	filter: (requestData: HttpRequest) => {
+	filter: (requestData) => {
 		let isChecked = true;
 		const { name } = requestData.body as MyData;
 		if (name === 'test') {
