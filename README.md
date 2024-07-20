@@ -72,7 +72,7 @@ NodeRestServer(routeConfig);
 
 ## Sample
 
-[example](https://github.com/nishant-labs/node-rest-server/tree/master/examples) directory provides a sample application explaining the use of this library.
+[example](https://github.com/nishant-labs/node-rest-server/tree/main/examples) directory provides a sample application explaining the use of this library.
 
 ## Route Configuration
 
