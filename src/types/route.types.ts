@@ -1,20 +1,13 @@
-import { Locals, Request as ExpressRequest } from 'express';
 import { ControllerOptions } from './config.types';
+import { BaseRequest, ExpressMiddlewareFunc, FilterData } from './express.types';
 
 export type RouteMethod = 'all' | 'get' | 'post' | 'put' | 'delete' | 'patch' | 'options' | 'head';
 
-interface Request {
+interface Request extends BaseRequest {
 	url: string;
 	body: unknown;
-	pathParams: ExpressRequest['params'];
-	queryParams: ExpressRequest['query'];
 	getHeader: (name: string) => string | undefined;
-	headers: ExpressRequest['headers'];
 	method: Lowercase<RouteMethod> | Uppercase<RouteMethod>;
-}
-
-export interface FilterData {
-	filter: Locals;
 }
 
 export interface HttpRequest extends Request, Partial<FilterData> {}
@@ -32,6 +25,7 @@ export interface RouteConfigItem {
 	method: Lowercase<RouteMethod> | Uppercase<RouteMethod>;
 	status?: number;
 	headers?: Record<string, string>;
+	middlewares?: Array<typeof ExpressMiddlewareFunc>;
 	controller: typeof ControllerFunc;
 }
 

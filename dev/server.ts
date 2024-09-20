@@ -65,6 +65,11 @@ const testData: RouteConfiguration = {
 	'/data/name/:id': [
 		{
 			method: 'GET',
+			middlewares: [
+				(_, _, next) => {
+					next();
+				},
+			],
 			controller: () => ({
 				status: 500,
 				payload: { data: 'get data' },

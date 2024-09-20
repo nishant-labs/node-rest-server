@@ -1,7 +1,8 @@
 import { Request as ExpressRequest, Response } from 'express';
 import { extractIfAvailable } from '../utils/object';
 import { ControllerOptions, ServerConfiguration } from '../types/config.types';
-import { FilterData, HttpRequest, RouteMethod } from '../types/route.types';
+import { HttpRequest, RouteMethod } from '../types/route.types';
+import { FilterData } from '../types/express.types';
 
 export const getRequestData = (request: ExpressRequest): HttpRequest => ({
 	url: `${request.protocol}://${request.hostname}${request.originalUrl}`,
