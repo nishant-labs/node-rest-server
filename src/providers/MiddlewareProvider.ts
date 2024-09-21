@@ -42,3 +42,13 @@ export const registerStatusEndpoint = (app: Express) => {
 		response.send(stack);
 	});
 };
+
+export const registerMiddlewares = (app: Express, serverConfig: ServerConfiguration) => {
+	serverConfig.middlewares?.forEach((middleware) => {
+		if (typeof middleware === 'function') {
+			app.use(middleware);
+		} else {
+			logger.debug('Middleware should be a function', middleware);
+		}
+	});
+};

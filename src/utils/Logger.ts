@@ -10,14 +10,14 @@ let isEnabled = true;
 
 const getValue = (value?: boolean, defaultValue = false): boolean => (value === undefined ? defaultValue : value);
 
-const getMessage = (type: LoggerLevel, message: string[]) => ({
+const getMessage = (type: LoggerLevel, message: Array<unknown>) => ({
 	appName: appName(),
 	level: type.toUpperCase(),
 	timestamp: dateTime(),
 	userMessage: message.join(' '),
 });
 
-const print = (color: LoggerColor, type: LoggerLevel, ...message: string[]) => {
+const print = (color: LoggerColor, type: LoggerLevel, ...message: Array<unknown>) => {
 	if (isEnabled) {
 		const { appName, level, timestamp, userMessage } = getMessage(type, message);
 		const formattedLog = chalk[color](appName, '-', timestamp, '-', level.padEnd(5), '-', userMessage);
@@ -26,24 +26,24 @@ const print = (color: LoggerColor, type: LoggerLevel, ...message: string[]) => {
 };
 
 export const logger = {
-	log: (...message: string[]) => {
+	log: (...message: Array<unknown>) => {
 		print('green', 'log', ...message);
 	},
-	info: (...message: string[]) => {
+	info: (...message: Array<unknown>) => {
 		print('green', 'info', ...message);
 	},
-	warn: (...message: string[]) => {
+	warn: (...message: Array<unknown>) => {
 		print('yellow', 'warn', ...message);
 	},
-	debug: (...message: string[]) => {
+	debug: (...message: Array<unknown>) => {
 		if (isDebug) {
 			print('gray', 'debug', ...message);
 		}
 	},
-	error: (...message: string[]) => {
+	error: (...message: Array<unknown>) => {
 		print('red', 'error', ...message);
 	},
-	trace: (...message: string[]) => {
+	trace: (...message: Array<unknown>) => {
 		print('red', 'trace', ...message);
 	},
 };

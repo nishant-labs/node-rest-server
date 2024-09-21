@@ -17,9 +17,15 @@ const registerMethod = (app: Express, endpoint: string, endpointHandlerConfigIte
 		const method = String(endpointHandlerConfigItem.method);
 		logger.info('Registering route path:', method.toUpperCase(), uri);
 
-		// @ts-expect-error unsafe call to support dynamic generator
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-		app[method.toLowerCase()](uri, RouteProvider(endpointHandlerConfigItem, controllerOptions, serverConfig));
+		if (endpointHandlerConfigItem.middlewares?.length) {
+			// @ts-expect-error unsafe call to support dynamic generator
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+			app[method.toLowerCase()](uri, ...endpointHandlerConfigItem.middlewares, RouteProvider(endpointHandlerConfigItem, controllerOptions, serverConfig));
+		} else {
+			// @ts-expect-error unsafe call to support dynamic generator
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+			app[method.toLowerCase()](uri, RouteProvider(endpointHandlerConfigItem, controllerOptions, serverConfig));
+		}
 	}
 };
 
@@ -37,6 +43,8 @@ export function NodeRestServer(routeConfig: RouteConfiguration, serverConfig: Se
 		MiddlewareProvider.registerRequestLogger(app);
 		MiddlewareProvider.registerFilters(app, serverConfig);
 		MiddlewareProvider.registerStatusEndpoint(app);
+		MiddlewareProvider.registerMiddlewares(app, serverConfig);
+
 		const controllerOptions = getControllerOptions(serverConfig);
 
 		Object.keys(routeConfig).forEach((endpoint) => {

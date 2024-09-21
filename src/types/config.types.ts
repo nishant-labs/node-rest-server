@@ -1,9 +1,11 @@
-import { IncomingMessage, RequestListener, Server, ServerOptions } from 'node:http';
+import { IncomingMessage, RequestListener, Server } from 'node:http';
+import { ServerOptions } from 'node:https';
 import { Socket } from 'node:net';
 import { Duplex } from 'node:stream';
 import { CorsOptions } from 'cors';
 import { ValidationError } from 'fastest-validator';
 import { HttpRequest } from './route.types';
+import { ExpressMiddlewareFunc } from './express.types';
 
 export type LoggerLevel = 'log' | 'info' | 'warn' | 'debug' | 'error' | 'trace';
 export type LoggerColor = 'green' | 'gray' | 'yellow' | 'red';
@@ -31,6 +33,7 @@ export interface ServerConfiguration extends ControllerOptions {
 	filter?: typeof FilterFunc;
 	cors?: CorsOptions;
 	https?: ServerOptions;
+	middlewares?: Array<typeof ExpressMiddlewareFunc>;
 }
 
 export interface RestServer {
