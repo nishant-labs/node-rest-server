@@ -33,21 +33,21 @@ export default (routeConfig: RouteConfigItem, controllerOptions: ControllerOptio
 		const requestData = buildRequestData(request, response);
 		const serverConfigHeaders = handleResponseHeaders(serverConfig, requestData);
 		const responseData = handleControllerResponse(routeConfig, controllerOptions, requestData);
-		serverConfig.headers;
+
 		if (responseData instanceof Promise) {
 			responseData.then(
 				(resolvedResponseData) => {
 					sendResponse(routeConfig, serverConfig, response, resolvedResponseData, serverConfigHeaders);
 				},
-				(error: Error) => {
+				(error: unknown) => {
 					errorHandler(error);
-					publishErrorResponse(response, GLOBAL_API_ERROR, error.message);
+					publishErrorResponse(response, GLOBAL_API_ERROR, (error as Error).message);
 				},
 			);
 			return;
 		}
 		sendResponse(routeConfig, serverConfig, response, responseData, serverConfigHeaders);
-	} catch (error: unknown) {
+	} catch (error) {
 		errorHandler(error);
 		publishErrorResponse(response, GLOBAL_API_ERROR, (error as Error).message);
 	}
