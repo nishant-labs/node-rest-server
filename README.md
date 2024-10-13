@@ -28,11 +28,13 @@ Do you use for anything else!
 This is a [Node.js](https://nodejs.org/en/) module available through the [npm registry](https://www.npmjs.com/package/node-rest-server) and [github packages](https://github.com/nishant-labs/node-rest-server/pkgs/npm/node-rest-server). Install using below command.
 
 From NPM Registry
+
 ```bash
-npm install --save node-rest-server 
+npm install --save node-rest-server
 ```
 
 From Github packages
+
 ```bash
 npm install @nishant-labs/node-rest-server
 ```
@@ -83,12 +85,13 @@ A route configuration is an object with key(_route path_) value(_route options_)
 
 ### Route Options
 
-| Name                 | Type                     | Default | Description                                                                                                                                                                                                      |
-| :------------------- | :----------------------- | :------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| method               | `String`                 | `GET`   | Method defines the type of request controller will handle                                                                                                                                                        |
-| headers (_optional_) | `Record<String, String>` |         | Specify static headers to be passed in response                                                                                                                                                                  |
-| status (_optional_)  | `String`                 | `200`   | An appropriate HTTP response status code which server will give response for a request                                                                                                                           |
-| controller           | `function\|Object`       |         | This function/object will contain the business logic for the route path. For a function an object is passed which will contain request `url`, `body`, `params` and `header` and response of `filter` to be used. |
+| Name                 | Type                     | Default     | Description                                                                                                                                                                                                      |
+| :------------------- | :----------------------- | :---------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| method               | `String`                 | `GET`       | Method defines the type of request controller will handle                                                                                                                                                        |
+| headers (_optional_) | `Record<String, String>` |             | Specify static headers to be passed in response                                                                                                                                                                  |
+| status (_optional_)  | `String`                 | `200`       | An appropriate HTTP response status code which server will give response for a request                                                                                                                           |
+| controller           | `function\|Object`       |             | This function/object will contain the business logic for the route path. For a function an object is passed which will contain request `url`, `body`, `params` and `header` and response of `filter` to be used. |
+| middlewares          | `Function`               | `undefined` | List of ExpressJS compliant middlewares                                                                                                                                                                          |
 
 ### Controller method
 
@@ -168,6 +171,7 @@ This manages how the server will be configured
 | filter                | `function`         |             | Enable application level filter and pass returned value(supports `Promise`) to controller.                                                                                                              |
 | cors                  | `Object`           | `undefined` | Config should be as per [cors](https://github.com/expressjs/cors) package                                                                                                                               |
 | headers               | `Object\|Function` | `undefined` | Any object with headers or a function which returns object with headers                                                                                                                                 |
+| middlewares           | `Function`         | `undefined` | List of ExpressJS compliant middlewares                                                                                                                                                                 |
 
 ### Server config Example
 

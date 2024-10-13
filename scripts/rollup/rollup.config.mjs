@@ -15,7 +15,7 @@ export default [
 			format: 'esm',
 		},
 		external: isExternal,
-		plugins: [typescript({ tsconfig: './tsconfig.json' })],
+		plugins: [typescript({ tsconfig: './tsconfig.build.json' })],
 	},
 	{
 		input: path.join(process.cwd(), 'src/index.ts'),

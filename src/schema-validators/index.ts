@@ -1,7 +1,8 @@
 import { serverSettingsValidator } from './validators';
 import { logger } from '../utils/Logger';
 import { ERROR } from '../constants/content';
-import { ServerConfiguration, ValidatorResponse } from '../types/config.types';
+import { ServerConfiguration } from '../types/config.types';
+import { ValidatorResponse } from '../types/validators.types';
 import { ValidationError } from 'fastest-validator';
 
 const commonResultProcessor = (result: ValidatorResponse, type: string) => {

@@ -1,4 +1,4 @@
-import RestServer, { RouteConfiguration, ControllerResponse, ControllerFunc } from 'node-rest-server';
+import NodeRestServer, { RouteConfiguration, ControllerResponse, ControllerFunc } from 'node-rest-server';
 
 interface MyData {
 	gender: string;
@@ -54,7 +54,7 @@ const endpoints: RouteConfiguration = {
 	},
 };
 
-const serverInstance = RestServer(endpoints);
+const serverInstance = NodeRestServer(endpoints);
 
 // Test Server is started and endpoint is working
 void fetch('http://localhost:8000/profile')

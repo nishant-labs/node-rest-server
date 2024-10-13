@@ -17,3 +17,18 @@ export const extractIfAvailable = (object: ServerConfiguration, attributes: keyo
 
 	return {} as ControllerOptions;
 };
+
+const stringifyReplacerCircularBreak = () => {
+	const seen = new WeakSet();
+	return (_: string, value: unknown) => {
+		if (typeof value === 'object' && value !== null) {
+			if (seen.has(value)) {
+				return '[circular object]';
+			}
+			seen.add(value);
+		}
+		return value;
+	};
+};
+
+export const stringify = (jsonObject: unknown, beautify?: boolean) => JSON.stringify(jsonObject, stringifyReplacerCircularBreak(), beautify ? 2 : undefined);

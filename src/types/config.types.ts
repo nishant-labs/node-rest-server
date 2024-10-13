@@ -3,7 +3,6 @@ import { ServerOptions } from 'node:https';
 import { Socket } from 'node:net';
 import { Duplex } from 'node:stream';
 import { CorsOptions } from 'cors';
-import { ValidationError } from 'fastest-validator';
 import { HttpRequest } from './route.types';
 import { ExpressMiddlewareFunc } from './express.types';
 
@@ -13,7 +12,8 @@ type HttpServerInstance = Server | undefined;
 
 export interface LoggerConfiguration {
 	enable: boolean;
-	debug: boolean;
+	debug?: boolean;
+	beautifyJSON?: boolean;
 }
 
 export declare function DatabaseConnectionFunc(requestData: HttpRequest): Promise<unknown>;
@@ -51,5 +51,3 @@ export interface RestServer {
 	addListener(event: 'clientError', listener: (err: Error, socket: Duplex) => void): HttpServerInstance;
 	addListener(event: 'error', listener: (err: Error) => void): HttpServerInstance;
 }
-
-export type ValidatorResponse = true | ValidationError[] | Promise<true | ValidationError[]>;
