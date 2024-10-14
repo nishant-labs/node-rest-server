@@ -1,5 +1,12 @@
 {
-  "name": "@nishant-labs/node-rest-server",
-  "version": "4.3.0",
-  "exports": "./mod.ts"
+	"name": "@nishant-labs/node-rest-server",
+	"version": "4.3.1",
+	"exports": {
+		".": "./src/index.ts",
+		"./NodeRestServer": "./src/index.ts"
+	},
+	"publish": {
+		"include": ["README.md", "LICENSE", "src/**/*.ts", "jsr.json"],
+		"exclude": ["**/*.test.ts"]
+	}
 }
