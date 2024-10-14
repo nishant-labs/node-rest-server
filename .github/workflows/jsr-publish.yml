@@ -1,11 +1,11 @@
 # This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
 # For more information see: https://help.github.com/actions/language-and-framework-guides/publishing-nodejs-packages
 
-name: PR code quality checks
+name: Publish node-rest-server Package
 
 on:
-  pull_request:
-    types: [opened, edited, synchronize, reopened]
+  release:
+    types: [published]
 
 jobs:
   build:
@@ -19,4 +19,14 @@ jobs:
       - run: npm run build
       - run: npm run lint
       - run: npm run format
-      - run: npm run test
+      - run: npm test
+
+  publish-jsr:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Publish package
+        run: npx jsr publish
