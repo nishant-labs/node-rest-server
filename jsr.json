@@ -1,0 +1,5 @@
+{
+  "name": "@nishant-labs/node-rest-server",
+  "version": "4.3.0",
+  "exports": "./mod.ts"
+}
