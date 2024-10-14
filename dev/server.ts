@@ -66,7 +66,7 @@ const testData: RouteConfiguration = {
 		{
 			method: 'GET',
 			middlewares: [
-				(_, _, next) => {
+				(_, __, next) => {
 					next();
 				},
 			],
@@ -116,4 +116,4 @@ const serverConfigs: ServerConfiguration = {
 	},
 };
 
-NodeRestServer(testData, serverConfigs);
+export default NodeRestServer(testData, serverConfigs);

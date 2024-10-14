@@ -1,24 +1,26 @@
 import chalk from 'chalk';
 import { format } from 'date-fns';
-import { LoggerColor, LoggerLevel, ServerConfiguration } from '../types/config.types';
+import { LoggerColor, LoggerConfiguration, LoggerLevel, ServerConfiguration } from '../types/config.types';
+import { stringify } from './object';
 
 const dateTime = () => format(Date.now(), 'dd-MM-yyyy HH-mm-ss');
 const appName = () => '[node-rest-server]';
 
-let isDebug = false;
-let isEnabled = true;
-
-const getValue = (value?: boolean, defaultValue = false): boolean => (value === undefined ? defaultValue : value);
+let loggerConfig: LoggerConfiguration = {
+	enable: false,
+	debug: false,
+	beautifyJSON: false,
+};
 
 const getMessage = (type: LoggerLevel, message: Array<unknown>) => ({
 	appName: appName(),
 	level: type.toUpperCase(),
 	timestamp: dateTime(),
-	userMessage: message.join(' '),
+	userMessage: message.map((value) => stringify(value, loggerConfig.beautifyJSON)).join(' '),
 });
 
 const print = (color: LoggerColor, type: LoggerLevel, ...message: Array<unknown>) => {
-	if (isEnabled) {
+	if (loggerConfig.enable) {
 		const { appName, level, timestamp, userMessage } = getMessage(type, message);
 		const formattedLog = chalk[color](appName, '-', timestamp, '-', level.padEnd(5), '-', userMessage);
 		console[type](formattedLog);
@@ -36,7 +38,7 @@ export const logger = {
 		print('yellow', 'warn', ...message);
 	},
 	debug: (...message: Array<unknown>) => {
-		if (isDebug) {
+		if (loggerConfig.debug) {
 			print('gray', 'debug', ...message);
 		}
 	},
@@ -50,10 +52,8 @@ export const logger = {
 
 export const initializeLogger = ({ logger }: ServerConfiguration) => {
 	if (typeof logger === 'boolean') {
-		isDebug = false;
-		isEnabled = logger;
-	} else if (typeof logger === 'object') {
-		isDebug = getValue(logger.debug, false);
-		isEnabled = getValue(logger.enable, true);
+		loggerConfig.enable = logger;
+	} else {
+		loggerConfig = logger!;
 	}
 };

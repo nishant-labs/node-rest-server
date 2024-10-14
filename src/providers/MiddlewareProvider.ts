@@ -9,8 +9,8 @@ export const registerRequestLogger = (app: Express) => {
 	app.use((request, _response, next) => {
 		const data = getRequestData(request);
 		logger.info(`Request URL: ${data.method} ${new URL(data.url).pathname}`);
-		logger.debug('Request headers: ', JSON.stringify(data.headers));
-		logger.debug('Request body: ', JSON.stringify(data.body));
+		logger.debug('Request headers: ', data.headers);
+		logger.debug('Request body: ', data.body);
 		next();
 	});
 };
