@@ -1,6 +1,6 @@
 {
 	"name": "@nishant-labs/node-rest-server",
-	"version": "4.3.1",
+	"version": "4.3.2",
 	"exports": {
 		".": "./src/index.ts",
 		"./NodeRestServer": "./src/index.ts"

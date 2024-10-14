@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { ServerConfiguration } from '..';
+import { ServerConfiguration } from '../types/config.types';
 import { logger } from '../utils/Logger';
 import { ControllerResponse, RouteConfigItem } from '../types/route.types';
 
