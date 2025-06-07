@@ -47,7 +47,7 @@ export const sendResponse = (
 	serverConfigHeaders?: Record<string, string>,
 ) => {
 	const finalResponse = extractResponseData(routeConfig, controllerResponseData, serverConfigHeaders);
-	logger.debug('Response sent : ', finalResponse.payload);
+	logger.debug(`Response sent : ${JSON.stringify(finalResponse.payload)}`);
 	if (serverConfig.delay && serverConfig.delay > 0) {
 		setTimeout(() => {
 			publishResponse(response, finalResponse);

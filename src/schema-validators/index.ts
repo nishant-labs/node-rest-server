@@ -1,5 +1,4 @@
 import { serverSettingsValidator } from './validators';
-import { logger } from '../utils/Logger';
 import { ERROR } from '../constants/content';
 import { ServerConfiguration } from '../types/config.types';
 import { ValidatorResponse } from '../types/validators.types';
@@ -13,7 +12,7 @@ const commonResultProcessor = (result: ValidatorResponse, type: string) => {
 };
 
 export const validateServerSettings = (serverConfig?: ServerConfiguration) => {
-	logger.info('Validating Server settings');
+	console.log('Validating Server settings');
 	const validationStatus: ValidatorResponse = serverSettingsValidator(serverConfig);
 	commonResultProcessor(validationStatus, 'server settings');
 };
