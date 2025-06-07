@@ -94,6 +94,7 @@ const serverConfigs: ServerConfiguration = {
 	logger: {
 		enable: true,
 		debug: true,
+		file: 'server.log',
 	},
 	getDatabaseConnection: async () => {
 		return Promise.resolve('me');

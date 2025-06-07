@@ -13,7 +13,7 @@ const registerMethod = (app: Express, endpoint: string, endpointHandlerConfigIte
 	const uri = `${serverConfig.basePath || ''}${endpoint}`;
 	if (typeof endpointHandlerConfigItem.method === 'string') {
 		const method = String(endpointHandlerConfigItem.method);
-		logger.info('Registering route path:', method.toUpperCase(), uri);
+		logger.info(`Registering route path: ${method.toUpperCase()} ${uri}`);
 
 		if (endpointHandlerConfigItem.middlewares?.length) {
 			// @ts-expect-error unsafe call to support dynamic generator
@@ -29,10 +29,10 @@ const registerMethod = (app: Express, endpoint: string, endpointHandlerConfigIte
 
 export function buildNodeRestServer(routeConfig: RouteConfiguration, serverConfig: ServerConfiguration = {}): Express {
 	validateServerSettings(serverConfig);
+	initializeLogger(serverConfig);
+
 	logger.info('Loading resources and starting server');
 	const app = express();
-	logger.debug('initializing application logger with', serverConfig.logger);
-	initializeLogger(serverConfig);
 	logger.debug('Applying preprocessors');
 	initPreProcessors(app, serverConfig);
 
@@ -52,7 +52,7 @@ export function buildNodeRestServer(routeConfig: RouteConfiguration, serverConfi
 					registerMethod(app, endpoint, endpointHandlerConfigItem, controllerOptions, serverConfig);
 				});
 			} else {
-				logger.error('Multiple handlers for same http method found for endpoint : ', endpoint);
+				logger.error(`Multiple handlers for same http method found for endpoint : ${endpoint}`);
 			}
 		} else {
 			registerMethod(app, endpoint, endpointHandlerConfigs, controllerOptions, serverConfig);

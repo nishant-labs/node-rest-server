@@ -32,7 +32,8 @@ const serverSettingsProperties: ValidationSchema<Required<ServerConfiguration>> 
 				props: {
 					enable: { type: 'boolean', default: true },
 					debug: { type: 'boolean', default: false },
-					beautifyJSON: { type: 'boolean', default: false },
+					name: { type: 'string', default: 'node-rest-server' },
+					level: { type: 'string', optional: true },
 				},
 			},
 		],

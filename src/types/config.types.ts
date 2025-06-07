@@ -6,14 +6,18 @@ import { CorsOptions } from 'cors';
 import { HttpRequest } from './route.types';
 import { ExpressMiddlewareFunc } from './express.types';
 
-export type LoggerLevel = 'log' | 'info' | 'warn' | 'debug' | 'error' | 'trace';
-export type LoggerColor = 'green' | 'gray' | 'yellow' | 'red';
 type HttpServerInstance = Server | undefined;
 
 export interface LoggerConfiguration {
 	enable: boolean;
+	name?: string;
+	level?: 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal';
+
+	/**
+	 * @deprecated The "debug" property is deprecated. Use "level" instead.
+	 */
 	debug?: boolean;
-	beautifyJSON?: boolean;
+	file?: string;
 }
 
 export declare function DatabaseConnectionFunc(requestData: HttpRequest): Promise<unknown>;

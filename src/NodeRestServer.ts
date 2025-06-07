@@ -13,15 +13,20 @@ export function NodeRestServer(routeConfig: RouteConfiguration, serverConfig: Se
 
 		let server: https.Server | Express = app;
 		if (serverConfig.https) {
+			// eslint-disable-next-line @typescript-eslint/no-misused-promises
 			server = https.createServer(serverConfig.https, app);
 		}
 
-		const serverInstance: http.Server = server.listen(app.get('port'), () => {
-			logger.info('Server started listening on port', app.get('port') as string);
+		const serverInstance: http.Server = server.listen(app.get('port'), (error) => {
+			if (error) {
+				logger.error(`Error starting server: ${error}`);
+			} else {
+				logger.info(`Server started listening on port ${app.get('port') as string}`);
+			}
 		});
 		return getServerReturnHandlers(serverInstance);
 	} catch (error: unknown) {
-		logger.error(error as string);
+		console.error(error as string);
 		return getServerReturnHandlers();
 	}
 }
