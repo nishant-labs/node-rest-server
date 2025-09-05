@@ -1,5 +1,5 @@
 import { ControllerOptions } from './config.types';
-import { BaseRequest, ExpressMiddlewareFunc, FilterData } from './express.types';
+import { BaseRequest, ExpressMiddlewareFunc, ExpressRequest, ExpressResponse, FilterData } from './express.types';
 
 export type RouteMethod = 'all' | 'get' | 'post' | 'put' | 'delete' | 'patch' | 'options' | 'head';
 
@@ -10,7 +10,9 @@ interface Request extends BaseRequest {
 	method: Lowercase<RouteMethod> | Uppercase<RouteMethod>;
 }
 
-export interface HttpRequest extends Request, Partial<FilterData> {}
+export interface HttpRequest extends Request, Partial<FilterData> {
+	rawRequest?: ExpressRequest;
+}
 
 export interface ControllerResponse {
 	status?: number;
@@ -19,7 +21,12 @@ export interface ControllerResponse {
 	[key: string]: unknown;
 }
 
-export declare function ControllerFunc(requestData: HttpRequest, controllerOptions: ControllerOptions): ControllerResponse | Promise<ControllerResponse>;
+export declare function ControllerFunc(
+	requestData: HttpRequest,
+	controllerOptions: ControllerOptions,
+	request?: ExpressRequest,
+	response?: ExpressResponse,
+): ControllerResponse | Promise<ControllerResponse>;
 
 export interface RouteConfigItem {
 	method: Lowercase<RouteMethod> | Uppercase<RouteMethod>;

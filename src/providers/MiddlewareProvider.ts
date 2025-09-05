@@ -21,7 +21,7 @@ export const registerFilters = (app: Express, serverConfig: ServerConfiguration)
 		const data = getRequestData(request);
 		if (typeof serverConfig.filter === 'function') {
 			logger.info('Executing filter...');
-			const filterData = serverConfig.filter(data);
+			const filterData = serverConfig.filter(data, request, response);
 			if (filterData instanceof Promise) {
 				filterData.then((filterDataResponse: unknown) => {
 					response.locals = filterDataResponse || {};

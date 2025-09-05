@@ -1,8 +1,7 @@
-import { Request as ExpressRequest, Response } from 'express';
 import { extractIfAvailable } from '../utils/object';
 import { ControllerOptions, ServerConfiguration } from '../types/config.types';
 import { HttpRequest, RouteMethod } from '../types/route.types';
-import { FilterData } from '../types/express.types';
+import { ExpressRequest, ExpressResponse, FilterData } from '../types/express.types';
 
 export const getRequestData = (request: ExpressRequest): HttpRequest => ({
 	url: `${request.protocol}://${request.hostname}${request.originalUrl}`,
@@ -12,9 +11,10 @@ export const getRequestData = (request: ExpressRequest): HttpRequest => ({
 	getHeader: (name: string) => request.get(name),
 	headers: request.headers,
 	method: request.method as RouteMethod,
+	rawRequest: request,
 });
 
-export const getFilterData = (response: Response): FilterData => ({
+export const getFilterData = (response: ExpressResponse): FilterData => ({
 	filter: response.locals,
 });
 

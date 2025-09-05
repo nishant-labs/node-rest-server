@@ -4,7 +4,7 @@ import { Socket } from 'node:net';
 import { Duplex } from 'node:stream';
 import { CorsOptions } from 'cors';
 import { HttpRequest } from './route.types';
-import { ExpressMiddlewareFunc } from './express.types';
+import { ExpressMiddlewareFunc, ExpressRequest, ExpressResponse } from './express.types';
 
 type HttpServerInstance = Server | undefined;
 
@@ -20,9 +20,9 @@ export interface LoggerConfiguration {
 	file?: string;
 }
 
-export declare function DatabaseConnectionFunc(requestData: HttpRequest): Promise<unknown>;
-export declare function FilterFunc(requestData: HttpRequest): Promise<unknown>;
-export declare function HeaderFunc(requestData: HttpRequest): Record<string, string>;
+export declare function DatabaseConnectionFunc(requestData: HttpRequest, request?: ExpressRequest, response?: ExpressResponse): Promise<unknown>;
+export declare function FilterFunc(requestData: HttpRequest, request?: ExpressRequest, response?: ExpressResponse): Promise<unknown>;
+export declare function HeaderFunc(requestData: HttpRequest, request?: ExpressRequest, response?: ExpressResponse): Record<string, string>;
 
 export interface ControllerOptions {
 	getDatabaseConnection?: typeof DatabaseConnectionFunc;
