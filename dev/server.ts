@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
+
 import NodeRestServer, { RouteConfiguration, ServerConfiguration } from '../lib/index.mjs';
 
 interface MyData {
