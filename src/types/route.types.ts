@@ -14,12 +14,11 @@ export interface HttpRequest extends Request, Partial<FilterData> {
 	rawRequest?: ExpressRequest;
 }
 
-export interface ControllerResponse {
+export type ControllerResponse = {
 	status?: number;
 	payload?: unknown;
 	headers?: Record<string, string>;
-	[key: string]: unknown;
-}
+} & { [key: string]: unknown };
 
 export declare function ControllerFunc(
 	requestData: HttpRequest,
@@ -33,7 +32,7 @@ export interface RouteConfigItem {
 	status?: number;
 	headers?: Record<string, string>;
 	middlewares?: Array<typeof ExpressMiddlewareFunc>;
-	controller: typeof ControllerFunc;
+	controller: typeof ControllerFunc | ControllerResponse | Promise<ControllerResponse>;
 }
 
 export type RouteConfiguration = Record<string, RouteConfigItem | Array<RouteConfigItem>>;

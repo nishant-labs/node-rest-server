@@ -15,20 +15,20 @@
 		"build": "rollup --config scripts/rollup/rollup.config.mjs",
 		"dev:watch": "npm run build -- --watch",
 		"dev:server": "tsx dev/index.ts",
-		"lint": "eslint src/**/* dev/**/*",
-		"lint:fix": "npm run lint -- --fix",
-		"format": "prettier src dev examples/index.ts test README.md --check",
-		"format:fix": "prettier src dev examples/index.ts test README.md --write",
+		"lint": "npm run lint:check -- --fix",
+		"lint:check": "eslint src/**/* dev/**/*",
+		"format": "prettier src dev examples/index.ts test README.md --write",
+		"format:check": "prettier src dev examples/index.ts test README.md --check",
 		"pre:commit": "lint-staged",
 		"prepare": "husky && npm --prefix ./examples install",
-		"everything": " npm run build && npm run lint:fix && npm run format:fix",
-		"test": "tsx ./scripts/test/start.ts",
+		"everything": " npm run build && npm run test:coverage && npm run lint && npm run format",
+		"test": "vitest",
 		"test:coverage": "vitest run --coverage"
 	},
 	"lint-staged": {
 		"src/**/*": [
-			"npm run format:fix",
-			"npm run lint:fix"
+			"npm run format",
+			"npm run lint"
 		]
 	},
 	"repository": {
@@ -57,34 +57,34 @@
 		"errorhandler": "1.5.1",
 		"express": "5.1.0",
 		"fastest-validator": "1.19.1",
-		"pino": "9.9.0",
+		"pino": "9.9.4",
 		"pino-http": "10.5.0",
 		"pino-pretty": "13.1.1"
 	},
 	"devDependencies": {
-		"@babel/core": "7.28.3",
+		"@babel/core": "7.28.4",
 		"@babel/preset-typescript": "7.27.1",
-		"@eslint/js": "9.34.0",
+		"@eslint/js": "9.35.0",
 		"@rollup/plugin-babel": "6.0.4",
 		"@rollup/plugin-node-resolve": "16.0.1",
 		"@rollup/plugin-typescript": "12.1.4",
 		"@types/cors": "2.8.19",
 		"@types/errorhandler": "1.5.3",
 		"@types/express": "5.0.3",
-		"@types/node": "24.3.0",
+		"@types/node": "24.3.1",
 		"@vitest/coverage-v8": "3.2.4",
 		"concurrently": "9.2.1",
-		"eslint": "9.34.0",
+		"eslint": "9.35.0",
 		"husky": "9.1.7",
-		"lint-staged": "16.1.5",
+		"lint-staged": "16.1.6",
 		"pactum": "3.8.0",
 		"prettier": "3.6.2",
-		"rollup": "4.49.0",
+		"rollup": "4.50.0",
 		"rollup-plugin-dts": "6.2.3",
 		"tslib": "2.8.1",
 		"tsx": "4.20.5",
 		"typescript": "5.9.2",
-		"typescript-eslint": "8.41.0",
+		"typescript-eslint": "8.42.0",
 		"vitest": "3.2.4"
 	}
 }

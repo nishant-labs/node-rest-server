@@ -1,7 +1,7 @@
+import { logger } from '../utils/Logger';
 import { GLOBAL_API_ERROR } from '../constants/global';
 import { getRequestData, getFilterData } from '../handlers/RequestHandler';
 import { publishErrorResponse, sendResponse } from '../handlers/ResponseHandler';
-import { errorHandler } from '../utils/ErrorUtils';
 import { ControllerResponse, HttpRequest, RouteConfigItem } from '../types/route.types';
 import { ServerConfiguration, ControllerOptions } from '../types/config.types';
 import { ExpressRequest, ExpressResponse } from '../types/express.types';
@@ -42,7 +42,7 @@ export default (routeConfig: RouteConfigItem, controllerOptions: ControllerOptio
 					sendResponse(routeConfig, serverConfig, response, resolvedResponseData, serverConfigHeaders);
 				},
 				(error: unknown) => {
-					errorHandler(error);
+					logger.error(error);
 					publishErrorResponse(response, GLOBAL_API_ERROR, (error as Error).message);
 				},
 			);
@@ -50,7 +50,7 @@ export default (routeConfig: RouteConfigItem, controllerOptions: ControllerOptio
 		}
 		sendResponse(routeConfig, serverConfig, response, responseData, serverConfigHeaders);
 	} catch (error) {
-		errorHandler(error);
+		logger.error(error);
 		publishErrorResponse(response, GLOBAL_API_ERROR, (error as Error).message);
 	}
 };

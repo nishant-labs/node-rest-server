@@ -1,5 +1,5 @@
 import FastValidator from 'fastest-validator';
-import { serverSettingsSchema } from './schemas/serverSettings';
+import { serverSettingsSchema } from './schemas/serverSettingsSchema';
 
 const validator = new FastValidator();
 

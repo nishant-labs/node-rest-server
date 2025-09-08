@@ -1,8 +1,8 @@
 import express, { Express } from 'express';
 import { RouteProvider, MiddlewareProvider } from './providers/index';
 import { initializeLogger, logger } from './utils/Logger';
-import { initPreProcessors } from './utils/ServerProcessor';
-import { registerDevErrorHandler } from './handlers/ErrorHander';
+import { initPreProcessors } from './handlers/ServerProcessor';
+import { registerDevErrorHandler } from './handlers/ErrorHandler';
 import { validateServerSettings } from './schema-validators/index';
 import { getControllerOptions } from './handlers/RequestHandler';
 import { hasUniqueMethods } from './utils/array';

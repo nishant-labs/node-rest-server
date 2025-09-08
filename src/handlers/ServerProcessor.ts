@@ -1,7 +1,7 @@
 import * as http from 'node:http';
 import express, { Express } from 'express';
 import cors from 'cors';
-import { logger } from './Logger';
+import { logger } from '../utils/Logger';
 import { RestServer, ServerConfiguration } from '../types/config.types';
 
 const configProcessor = (app: Express, serverConfig: ServerConfiguration) => {

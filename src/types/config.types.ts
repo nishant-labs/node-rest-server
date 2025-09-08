@@ -3,6 +3,7 @@ import { ServerOptions } from 'node:https';
 import { Socket } from 'node:net';
 import { Duplex } from 'node:stream';
 import { CorsOptions } from 'cors';
+import { LevelWithSilentOrString } from 'pino';
 import { HttpRequest } from './route.types';
 import { ExpressMiddlewareFunc, ExpressRequest, ExpressResponse } from './express.types';
 
@@ -11,7 +12,7 @@ type HttpServerInstance = Server | undefined;
 export interface LoggerConfiguration {
 	enable: boolean;
 	name?: string;
-	level?: 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal';
+	level?: LevelWithSilentOrString;
 
 	/**
 	 * @deprecated The "debug" property is deprecated. Use "level" instead.
@@ -21,7 +22,8 @@ export interface LoggerConfiguration {
 }
 
 export declare function DatabaseConnectionFunc(requestData: HttpRequest, request?: ExpressRequest, response?: ExpressResponse): Promise<unknown>;
-export declare function FilterFunc(requestData: HttpRequest, request?: ExpressRequest, response?: ExpressResponse): Promise<unknown>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export declare function FilterFunc(requestData: HttpRequest, request?: ExpressRequest, response?: ExpressResponse): Promise<Record<string, any>>;
 export declare function HeaderFunc(requestData: HttpRequest, request?: ExpressRequest, response?: ExpressResponse): Record<string, string>;
 
 export interface ControllerOptions {

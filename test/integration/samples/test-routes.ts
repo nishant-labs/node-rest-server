@@ -1,4 +1,4 @@
-import { RouteConfiguration } from '../../lib/index.mjs';
+import { RouteConfiguration } from '../../../lib/index.mjs';
 
 export const allRoutes: RouteConfiguration = {
 	'/test/hello': {

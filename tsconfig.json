@@ -4,6 +4,12 @@
 		"src",
 		"examples",
 		"dev",
-		"mod.ts"
+		"mod.ts",
+		"test"
 	],
+	"references": [
+		{
+			"path": "./tsconfig.node.json"
+		}
+	]
 }

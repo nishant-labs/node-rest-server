@@ -1,7 +1,6 @@
 import { Express } from 'express';
 import { logger } from '../utils/Logger';
 import { getRequestData } from '../handlers/RequestHandler';
-import { errorHandler } from '../utils/ErrorUtils';
 import { ServerConfiguration } from '../types/config.types';
 
 export const registerRequestLogger = (app: Express) => {
@@ -23,13 +22,19 @@ export const registerFilters = (app: Express, serverConfig: ServerConfiguration)
 			logger.info('Executing filter...');
 			const filterData = serverConfig.filter(data, request, response);
 			if (filterData instanceof Promise) {
-				filterData.then((filterDataResponse: unknown) => {
-					response.locals = filterDataResponse || {};
-					next();
-				}, errorHandler);
+				filterData
+					.then((filterDataResponse: unknown) => {
+						response.locals = filterDataResponse ?? {};
+						next();
+					})
+					.catch((error) => {
+						// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+						logger.error('Error occurred while applying filter:', error);
+						next();
+					});
 				return;
 			}
-			response.locals = filterData;
+			response.locals = filterData ?? {};
 		}
 		next();
 	});

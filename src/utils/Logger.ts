@@ -11,14 +11,14 @@ export const initializeLogger = (serverConfig: ServerConfiguration) => {
 	if (typeof serverConfig.logger === 'boolean') {
 		pinoConfig.enabled = serverConfig.logger;
 	} else {
-		const loggerConfig = serverConfig.logger as LoggerConfiguration;
+		const { name, enable, level, debug, file } = serverConfig.logger as Required<LoggerConfiguration>;
 
-		pinoConfig.name = loggerConfig.name! ?? pinoConfig.name;
-		pinoConfig.enabled = loggerConfig.enable;
-		pinoConfig.level = (loggerConfig.level ?? loggerConfig.debug) ? 'debug' : 'info';
+		pinoConfig.name = name ?? pinoConfig.name;
+		pinoConfig.enabled = enable;
+		pinoConfig.level = level ?? (debug ? 'debug' : 'info');
 
-		if (loggerConfig.file) {
-			transportConfig.targets = [...transportConfig.targets, { target: 'pino/file', options: { destination: loggerConfig.file, mkdir: true } }];
+		if (file) {
+			transportConfig.targets = [...transportConfig.targets, { target: 'pino/file', options: { destination: file, mkdir: true } }];
 		}
 	}
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

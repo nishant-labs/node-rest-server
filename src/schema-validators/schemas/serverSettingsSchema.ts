@@ -33,7 +33,8 @@ const serverSettingsProperties: ValidationSchema<Required<ServerConfiguration>> 
 					enable: { type: 'boolean', default: true },
 					debug: { type: 'boolean', default: false },
 					name: { type: 'string', default: 'node-rest-server' },
-					level: { type: 'string', optional: true },
+					level: { type: 'string', default: 'info' },
+					file: { type: 'string', optional: true },
 				},
 			},
 		],
@@ -43,7 +44,7 @@ const serverSettingsProperties: ValidationSchema<Required<ServerConfiguration>> 
 	cors: { type: 'any', optional: true },
 	getDatabaseConnection: { type: 'function', optional: true },
 	https: { type: 'any', optional: true },
-	middlewares: { type: 'function', optional: true },
+	middlewares: { type: 'array', items: 'function', optional: true },
 };
 
 export const serverSettingsSchema: RuleObject = {

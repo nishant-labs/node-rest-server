@@ -17,8 +17,8 @@ jobs:
           node-version: 22
       - run: npm ci
       - run: npm run build
-      - run: npm run lint
-      - run: npm run format
+      - run: npm run lint:check
+      - run: npm run format:check
       - run: npm test
 
   publish-jsr:
