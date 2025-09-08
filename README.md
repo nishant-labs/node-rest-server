@@ -41,18 +41,39 @@ npm install @nishant-labs/node-rest-server
 
 ## Importing
 
-```js
-import NodeRestServer from 'node-rest-server'; // ES6
-// or
-const NodeRestServer = require('node-rest-server'); // ES5
-// or
-import { NodeRestServer } from 'node-rest-server'; // If you like to use named export
+The package supports multiple import patterns:
 
-// Invoke it as function and pass configuration
+### ES Modules (recommended)
+```js
+// Default import
+import NodeRestServer from 'node-rest-server';
+
+// Named import
+import { NodeRestServer } from 'node-rest-server';
+
+// With TypeScript
+import NodeRestServer, { RouteConfiguration, ServerConfiguration } from 'node-rest-server';
+```
+
+### CommonJS
+```js
+// Default import
+const NodeRestServer = require('node-rest-server');
+
+// Named import
+const { NodeRestServer } = require('node-rest-server');
+```
+
+### Usage
+```js
+// Initialize server with configuration
 const serverInstance = NodeRestServer(routeConfig, serverConfig);
 
-serverInstance.addListener('<event name>', () => void); // Add event listener
-serverInstance.close(); // explicitly close server
+// Add event listeners if needed
+serverInstance.addListener('listening', () => console.log('Server started'));
+
+// Close server when needed
+await serverInstance.close(); // Returns Promise<Error | undefined>
 ```
 
 ## Usage Example
@@ -95,14 +116,27 @@ A route configuration is an object with key(_route path_) value(_route options_)
 
 ### Controller method
 
-A controller can either return
+A controller receives two parameters:
+
+1. `requestData`: Contains request information including:
+   - `url`: Full request URL
+   - `body`: Request body
+   - `pathParams`: URL path parameters
+   - `queryParams`: URL query parameters
+   - `headers`: Request headers
+   - `method`: HTTP method
+   - `rawRequest`: Original Express request object (optional)
+   - `filter`: Data from global filter if configured
+2. `controllerOptions`: Contains configured options like `getDatabaseConnection`
+
+A controller can return:
 
 - an object with `status`, `headers` and `payload`;
 
 ```js
 {
   status: 500, // should be a number
-	headers: { 'x-data': 'value' }, // optional header, should be a string record
+  headers: { 'x-data': 'value' }, // optional header, should be a string record
   payload: "Hello world" // user can send any valid json converted using JSON.stringify()
 }
 ```
@@ -134,23 +168,27 @@ const routeConfig = {
 		{
 			method: 'POST',
 			controller: async (requestData, { getDatabaseConnection }) => {
-				// requestData.method will be POST
-				const dataFromDB = await getDatabaseConnection();
+				// Access request data
+				const { method, body, pathParams, rawRequest } = requestData;
+				// method will be 'POST'
+				const dataFromDB = await getDatabaseConnection(requestData);
 				return { status: 200, payload: { data: 'Data', dataFromDB } };
 			},
 		},
 		{
 			method: 'GET',
 			controller: (requestData) => {
-				// requestData.method will be GET
-				return { status: 200, payload: { data: 'Async data' } };
+				// Access filter data if global filter is configured
+				const { filter } = requestData;
+				return { status: 200, payload: { data: 'Data', filterData: filter } };
 			},
 		},
 	],
 	'/async/endpoint': {
 		method: 'POST',
 		controller: (requestData) => {
-			// Some DB/api calls
+			// Access original Express request if needed
+			const { rawRequest } = requestData;
 			return { status: 200, payload: { data: 'Async data' } };
 		},
 	},

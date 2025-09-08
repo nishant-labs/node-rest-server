@@ -3,11 +3,17 @@
 	"version": "5.0.0",
 	"description": "Configurable node rest server",
 	"exports": {
-		".": "./lib/index.mjs",
-		"./lib": "./lib/index.mjs"
+		".": {
+			"types": "./lib/index.d.ts",
+			"import": "./lib/index.mjs",
+			"require": "./lib/index.cjs",
+			"default": "./lib/index.mjs"
+		}
 	},
-	"types": "./lib/index.d.mts",
+	"types": "./lib/index.d.ts",
 	"type": "module",
+	"main": "./lib/index.cjs",
+	"module": "./lib/index.mjs",
 	"scripts": {
 		"start": "concurrently npm:dev:*",
 		"start:example": "npm --prefix ./examples start",

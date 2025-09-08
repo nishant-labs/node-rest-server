@@ -13,7 +13,6 @@ export function NodeRestServer(routeConfig: RouteConfiguration, serverConfig: Se
 
 		let server: https.Server | Express = app;
 		if (serverConfig.https) {
-			 
 			server = https.createServer(serverConfig.https, app);
 		}
 

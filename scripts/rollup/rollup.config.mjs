@@ -10,10 +10,16 @@ const isExternal = (moduleName) => moduleName.startsWith('node:') || dependencie
 export default [
 	{
 		input: path.join(process.cwd(), 'src/index.ts'),
-		output: {
-			file: path.join(process.cwd(), pkg.exports['.']),
-			format: 'esm',
-		},
+		output: [
+			{
+				file: path.join(process.cwd(), './lib/index.mjs'),
+				format: 'esm',
+			},
+			{
+				file: path.join(process.cwd(), './lib/index.cjs'),
+				format: 'cjs',
+			}
+		],
 		external: isExternal,
 		plugins: [typescript({ tsconfig: './tsconfig.build.json' })],
 	},
