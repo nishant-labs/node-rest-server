@@ -7,7 +7,20 @@ import { LevelWithSilentOrString } from 'pino';
 import { HttpRequest } from './route.types';
 import { ExpressMiddlewareFunc, ExpressRequest, ExpressResponse } from './express.types';
 
-type HttpServerInstance = Server | undefined;
+export type HttpServerInstance = Server | undefined;
+
+/**
+ * Server event listener types for type safety
+ */
+export type ServerEventListener = {
+	(event: 'close' | 'listening', listener: () => void): HttpServerInstance;
+	(event: 'connect' | 'upgrade', listener: (req: IncomingMessage, socket: Duplex, head: Buffer) => void): HttpServerInstance;
+	(event: 'checkContinue' | 'checkExpectation' | 'request', listener: RequestListener): HttpServerInstance;
+	(event: 'connection', listener: (socket: Socket) => void): HttpServerInstance;
+	(event: 'dropRequest', listener: (req: IncomingMessage, socket: Duplex) => void): HttpServerInstance;
+	(event: 'clientError', listener: (err: Error, socket: Duplex) => void): HttpServerInstance;
+	(event: 'error', listener: (err: Error) => void): HttpServerInstance;
+};
 
 export interface LoggerConfiguration {
 	enable: boolean;

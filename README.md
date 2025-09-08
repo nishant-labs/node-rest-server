@@ -44,6 +44,7 @@ npm install @nishant-labs/node-rest-server
 The package supports multiple import patterns:
 
 ### ES Modules (recommended)
+
 ```js
 // Default import
 import NodeRestServer from 'node-rest-server';
@@ -56,6 +57,7 @@ import NodeRestServer, { RouteConfiguration, ServerConfiguration } from 'node-re
 ```
 
 ### CommonJS
+
 ```js
 // Default import
 const NodeRestServer = require('node-rest-server');
@@ -65,15 +67,57 @@ const { NodeRestServer } = require('node-rest-server');
 ```
 
 ### Usage
+
 ```js
 // Initialize server with configuration
 const serverInstance = NodeRestServer(routeConfig, serverConfig);
 
 // Add event listeners if needed
 serverInstance.addListener('listening', () => console.log('Server started'));
+serverInstance.addListener('close', () => console.log('Server shutdown complete'));
 
-// Close server when needed
-await serverInstance.close(); // Returns Promise<Error | undefined>
+// Server Events
+// - 'listening': Emitted when server starts listening
+// - 'close': Emitted when server is fully shutdown
+// - 'connection': Emitted when new connection is established
+// - 'error': Emitted when server encounters an error
+```
+
+### Server Shutdown
+
+The server provides two shutdown modes:
+
+```typescript
+// Graceful shutdown - waits for existing requests to complete (recommended)
+await serverInstance.close();
+
+// Forced shutdown - immediately closes all connections
+await serverInstance.close(true);
+```
+
+Shutdown behavior:
+
+- Graceful shutdown waits for existing requests to complete
+- Forced shutdown immediately closes all connections
+- Built-in 30-second timeout protection
+- Automatic cleanup of resources and event listeners
+- Returns Promise<Error | undefined>
+
+Example with error handling:
+
+```typescript
+try {
+	// Attempt graceful shutdown
+	await serverInstance.close();
+	console.log('Server shutdown complete');
+} catch (error) {
+	if (error.message.includes('timed out')) {
+		// Timeout occurred, try forced shutdown
+		await serverInstance.close(true);
+	} else {
+		console.error('Shutdown failed:', error);
+	}
+}
 ```
 
 ## Usage Example
