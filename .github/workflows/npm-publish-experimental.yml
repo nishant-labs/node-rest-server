@@ -1,7 +1,7 @@
 # This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
 # For more information see: https://help.github.com/actions/language-and-framework-guides/publishing-nodejs-packages
 
-name: Publish @nishant-labs/node-rest-server as experimental Package
+name: Publish node-rest-server as experimental Package
 
 on:
   pull_request:
@@ -20,25 +20,18 @@ jobs:
       - run: npm run lint:check
       - run: npm run format:check
       - run: npm test
-
-  publish-gpr:
+  publish-npm:
     needs: build
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          registry-url: 'https://npm.pkg.github.com'
-      - uses: jaywcjlove/github-action-package@main
-        with:
-          rename: '@nishant-labs/node-rest-server'
+          registry-url: https://registry.npmjs.org/
       - run: npm ci
       - run: npm run build
       - run: npm --no-git-tag-version version prerelease --preid=exp-${{ github.run_number }}
       - run: npm publish --tag experimental
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
