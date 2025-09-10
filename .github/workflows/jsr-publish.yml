@@ -22,6 +22,7 @@ jobs:
       - run: npm test
 
   publish-jsr:
+    needs: build
     runs-on: ubuntu-latest
     permissions:
       contents: read
