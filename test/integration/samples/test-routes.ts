@@ -15,7 +15,8 @@ export const allRoutes: RouteConfiguration = {
 			return {
 				status: 200,
 				payload: {
-					// @ts-ignore
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-expect-error
 					name: `Welcome ${requestData.body.name ?? 'Anonymous'}`,
 					Age: 28,
 				},
