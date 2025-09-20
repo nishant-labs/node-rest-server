@@ -1,12 +1,27 @@
 {
-	"extends": "./tsconfig.build.json",
-	"include": [
-		"src",
-		"examples",
-		"dev",
-		"mod.ts",
-		"test"
-	],
+	"compilerOptions": {
+		"target": "ES2020",
+		"module": "ESNext",
+		"lib": ["ES2020"],
+		"moduleResolution": "node",
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
+		"strict": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true,
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noImplicitReturns": true,
+		"noFallthroughCasesInSwitch": true,
+		"declaration": true,
+		"emitDeclarationOnly": false,
+		"sourceMap": false,
+		"outDir": "lib"
+	},
+	"include": ["src"],
+	"exclude": ["node_modules", "lib"],
 	"references": [
 		{
 			"path": "./tsconfig.node.json"
