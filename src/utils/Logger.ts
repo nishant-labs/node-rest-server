@@ -21,9 +21,8 @@ export const initializeLogger = (serverConfig: ServerConfiguration) => {
 			transportConfig.targets = [...transportConfig.targets, { target: 'pino/file', options: { destination: file, mkdir: true } }];
 		}
 	}
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
 	const transport = pino.transport(transportConfig);
 
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 	logger = pino(pinoConfig, transport);
 };

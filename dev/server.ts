@@ -30,7 +30,7 @@ const testData: RouteConfiguration = {
 			if (getDatabaseConnection !== undefined) {
 				dbData = await getDatabaseConnection(requestData);
 			}
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
 			return { payload: { place: 'The World', dbData } };
 		},
 	},

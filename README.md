@@ -107,16 +107,16 @@ Example with error handling:
 
 ```typescript
 try {
- // Attempt graceful shutdown
- await serverInstance.close();
- console.log('Server shutdown complete');
+	// Attempt graceful shutdown
+	await serverInstance.close();
+	console.log('Server shutdown complete');
 } catch (error) {
- if (error.message.includes('timed out')) {
-  // Timeout occurred, try forced shutdown
-  await serverInstance.close(true);
- } else {
-  console.error('Shutdown failed:', error);
- }
+	if (error.message.includes('timed out')) {
+		// Timeout occurred, try forced shutdown
+		await serverInstance.close(true);
+	} else {
+		console.error('Shutdown failed:', error);
+	}
 }
 ```
 
@@ -126,12 +126,12 @@ try {
 import NodeRestServer from 'node-rest-server';
 
 const routeConfig = {
- '/api1': {
-  method: 'GET',
-  status: 200,
-  header: { 'x-data': 'value' },
-  controller: () => 'Data',
- },
+	'/api1': {
+		method: 'GET',
+		status: 200,
+		header: { 'x-data': 'value' },
+		controller: () => 'Data',
+	},
 };
 
 NodeRestServer(routeConfig);
@@ -195,47 +195,47 @@ or
 
 ```js
 const routeConfig = {
- '/endpoint1': {
-  method: 'GET',
-  status: 200,
-  headers: { 'x-data': 'value' },
-  controller: () => 'Data',
- },
- '/endpoint2': {
-  method: 'POST',
-  controller: async (requestData, { getDatabaseConnection }) => {
-   const dataFromDB = await getDatabaseConnection();
-   return { status: 200, payload: { data: 'Data', dataFromDB } };
-  },
- },
- '/endpoint3': [
-  {
-   method: 'POST',
-   controller: async (requestData, { getDatabaseConnection }) => {
-    // Access request data
-    const { method, body, pathParams, rawRequest } = requestData;
-    // method will be 'POST'
-    const dataFromDB = await getDatabaseConnection(requestData);
-    return { status: 200, payload: { data: 'Data', dataFromDB } };
-   },
-  },
-  {
-   method: 'GET',
-   controller: (requestData) => {
-    // Access filter data if global filter is configured
-    const { filter } = requestData;
-    return { status: 200, payload: { data: 'Data', filterData: filter } };
-   },
-  },
- ],
- '/async/endpoint': {
-  method: 'POST',
-  controller: (requestData) => {
-   // Access original Express request if needed
-   const { rawRequest } = requestData;
-   return { status: 200, payload: { data: 'Async data' } };
-  },
- },
+	'/endpoint1': {
+		method: 'GET',
+		status: 200,
+		headers: { 'x-data': 'value' },
+		controller: () => 'Data',
+	},
+	'/endpoint2': {
+		method: 'POST',
+		controller: async (requestData, { getDatabaseConnection }) => {
+			const dataFromDB = await getDatabaseConnection();
+			return { status: 200, payload: { data: 'Data', dataFromDB } };
+		},
+	},
+	'/endpoint3': [
+		{
+			method: 'POST',
+			controller: async (requestData, { getDatabaseConnection }) => {
+				// Access request data
+				const { method, body, pathParams, rawRequest } = requestData;
+				// method will be 'POST'
+				const dataFromDB = await getDatabaseConnection(requestData);
+				return { status: 200, payload: { data: 'Data', dataFromDB } };
+			},
+		},
+		{
+			method: 'GET',
+			controller: (requestData) => {
+				// Access filter data if global filter is configured
+				const { filter } = requestData;
+				return { status: 200, payload: { data: 'Data', filterData: filter } };
+			},
+		},
+	],
+	'/async/endpoint': {
+		method: 'POST',
+		controller: (requestData) => {
+			// Access original Express request if needed
+			const { rawRequest } = requestData;
+			return { status: 200, payload: { data: 'Async data' } };
+		},
+	},
 };
 ```
 

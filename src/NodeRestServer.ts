@@ -25,7 +25,7 @@ export function NodeRestServer(routeConfig: RouteConfiguration, serverConfig: Se
 		});
 		return getServerReturnHandlers(serverInstance);
 	} catch (error: unknown) {
-		console.error(error as string);
+		console.error(error);
 		return getServerReturnHandlers();
 	}
 }
