@@ -21,20 +21,22 @@
 		"build": "vite build",
 		"dev:watch": "vite build --watch",
 		"dev:server": "tsx dev/index.ts",
-		"lint": "npm run lint:check -- --fix",
+		"lint": "npm run lint:check",
 		"lint:check": "eslint .",
-		"format": "prettier . --write",
+		"lint:fix": "eslint . --fix",
+		"format": "npm run format:fix",
 		"format:check": "prettier . --check",
+		"format:fix": "prettier . --write",
 		"pre:commit": "lint-staged",
 		"prepare": "husky && npm --prefix ./examples install",
-		"everything": " npm run build && npm run test:coverage && npm run lint && npm run format",
+		"everything": "npm run build && npm run test:coverage && npm run lint && npm run format",
 		"test": "vitest",
 		"test:coverage": "vitest run --coverage"
 	},
 	"lint-staged": {
-		"src/**/*": [
-			"npm run format",
-			"npm run lint"
+		"src/**/*.{ts,tsx,js,jsx,json,md}": [
+			"npm run format:fix --",
+			"npm run lint:fix --"
 		]
 	},
 	"repository": {
