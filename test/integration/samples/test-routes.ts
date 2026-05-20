@@ -1,4 +1,4 @@
-import { RouteConfiguration } from '../../lib/index.mjs';
+import { RouteConfiguration } from '../../../lib';
 
 export const allRoutes: RouteConfiguration = {
 	'/test/hello': {
@@ -15,7 +15,9 @@ export const allRoutes: RouteConfiguration = {
 			return {
 				status: 200,
 				payload: {
-					name: `Welcome ${(requestData.body as any).name ?? 'Anonymous'}`,
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-expect-error
+					name: `Welcome ${requestData.body.name ?? 'Anonymous'}`,
 					Age: 28,
 				},
 			};

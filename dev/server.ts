@@ -1,4 +1,5 @@
-import NodeRestServer, { RouteConfiguration, ServerConfiguration } from '../lib/index.mjs';
+import NodeRestServer from '../lib/index.mjs';
+import type { RouteConfiguration, ServerConfiguration } from '../lib/index.d';
 
 interface MyData {
 	gender?: string;
@@ -29,6 +30,7 @@ const testData: RouteConfiguration = {
 			if (getDatabaseConnection !== undefined) {
 				dbData = await getDatabaseConnection(requestData);
 			}
+
 			return { payload: { place: 'The World', dbData } };
 		},
 	},
@@ -117,4 +119,5 @@ const serverConfigs: ServerConfiguration = {
 	},
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 export default NodeRestServer(testData, serverConfigs);

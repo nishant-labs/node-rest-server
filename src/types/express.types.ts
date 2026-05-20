@@ -1,4 +1,8 @@
-import { Locals, Request as ExpressRequest, Response as ExpressResponse, NextFunction as ExpressNextFunction } from 'express';
+import { Locals, Request, Response, NextFunction } from 'express';
+
+export type ExpressRequest = Request;
+export type ExpressResponse = Response;
+export type ExpressNextFunction = NextFunction;
 
 export interface BaseRequest {
 	pathParams: ExpressRequest['params'];

@@ -2,7 +2,7 @@ import * as http from 'node:http';
 import * as https from 'node:https';
 import { Express } from 'express';
 import { logger } from './utils/Logger';
-import { getServerReturnHandlers } from './utils/ServerProcessor';
+import { getServerReturnHandlers } from './handlers/ServerProcessor';
 import { RouteConfiguration } from './types/route.types';
 import { ServerConfiguration, RestServer } from './types/config.types';
 import { buildNodeRestServer } from './buildServer';
@@ -13,7 +13,6 @@ export function NodeRestServer(routeConfig: RouteConfiguration, serverConfig: Se
 
 		let server: https.Server | Express = app;
 		if (serverConfig.https) {
-			// eslint-disable-next-line @typescript-eslint/no-misused-promises
 			server = https.createServer(serverConfig.https, app);
 		}
 
@@ -26,7 +25,7 @@ export function NodeRestServer(routeConfig: RouteConfiguration, serverConfig: Se
 		});
 		return getServerReturnHandlers(serverInstance);
 	} catch (error: unknown) {
-		console.error(error as string);
+		logger.error({ err: error as Error }, 'Failed to initialize server');
 		return getServerReturnHandlers();
 	}
 }

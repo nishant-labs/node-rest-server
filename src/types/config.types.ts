@@ -3,15 +3,29 @@ import { ServerOptions } from 'node:https';
 import { Socket } from 'node:net';
 import { Duplex } from 'node:stream';
 import { CorsOptions } from 'cors';
+import { LevelWithSilentOrString } from 'pino';
 import { HttpRequest } from './route.types';
-import { ExpressMiddlewareFunc } from './express.types';
+import { ExpressMiddlewareFunc, ExpressRequest, ExpressResponse } from './express.types';
 
-type HttpServerInstance = Server | undefined;
+export type HttpServerInstance = Server | undefined;
+
+/**
+ * Server event listener types for type safety
+ */
+export type ServerEventListener = {
+	(event: 'close' | 'listening', listener: () => void): HttpServerInstance;
+	(event: 'connect' | 'upgrade', listener: (req: IncomingMessage, socket: Duplex, head: Buffer) => void): HttpServerInstance;
+	(event: 'checkContinue' | 'checkExpectation' | 'request', listener: RequestListener): HttpServerInstance;
+	(event: 'connection', listener: (socket: Socket) => void): HttpServerInstance;
+	(event: 'dropRequest', listener: (req: IncomingMessage, socket: Duplex) => void): HttpServerInstance;
+	(event: 'clientError', listener: (err: Error, socket: Duplex) => void): HttpServerInstance;
+	(event: 'error', listener: (err: Error) => void): HttpServerInstance;
+};
 
 export interface LoggerConfiguration {
 	enable: boolean;
 	name?: string;
-	level?: 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal';
+	level?: LevelWithSilentOrString;
 
 	/**
 	 * @deprecated The "debug" property is deprecated. Use "level" instead.
@@ -20,9 +34,10 @@ export interface LoggerConfiguration {
 	file?: string;
 }
 
-export declare function DatabaseConnectionFunc(requestData: HttpRequest): Promise<unknown>;
-export declare function FilterFunc(requestData: HttpRequest): Promise<unknown>;
-export declare function HeaderFunc(requestData: HttpRequest): Record<string, string>;
+export declare function DatabaseConnectionFunc(requestData: HttpRequest, request?: ExpressRequest, response?: ExpressResponse): Promise<unknown>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export declare function FilterFunc(requestData: HttpRequest, request?: ExpressRequest, response?: ExpressResponse): Promise<Record<string, any>>;
+export declare function HeaderFunc(requestData: HttpRequest, request?: ExpressRequest, response?: ExpressResponse): Record<string, string>;
 
 export interface ControllerOptions {
 	getDatabaseConnection?: typeof DatabaseConnectionFunc;

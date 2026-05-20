@@ -2,38 +2,30 @@
 
 [![NPM](https://nodei.co/npm/node-rest-server.png)](https://nodei.co/npm/node-rest-server/)
 
-Configuration only node rest server
+A configuration-driven Node.js REST server with Express middleware support and built-in response handling.
 
-Get your own rest based nodejs server within minutes by just providing endpoints and controller.
-
-> Repo is migrated to publish module js bundle along with typescript typings.
+> The package ships as an ES module bundle with TypeScript declarations.
 
 ## Features
 
-- Ready to use rest server in minutes.
-- Free from all boilerplate code for creating and managing the server, so that developer can focus on actual business logic.
-- Simple configuration to generate response data.
-- Supports all http methods along with async connections
-
-## Where you can use
-
-- Can be used as a stub server for any application(like ReactJS, AngularJS) to mock server response during development.
-
-- Can be used for creating rest micro-service in minutes (help me improve this library)
-
-Do you use for anything else!
+- Configure REST endpoints with minimal boilerplate
+- Supports all standard HTTP methods and async controllers
+- Built-in response types: `payload`, `error`, `file`, and `html`
+- Global request filter with async support
+- Per-route Express-compatible middleware support
+- Configurable CORS, headers, delay, and HTTPS options
+- Graceful and forced server shutdown support
+- Fully typed TypeScript exports
 
 ## Installation
 
-This is a [Node.js](https://nodejs.org/en/) module available through the [npm registry](https://www.npmjs.com/package/node-rest-server) and [github packages](https://github.com/nishant-labs/node-rest-server/pkgs/npm/node-rest-server). Install using below command.
-
-From NPM Registry
+Install from npm:
 
 ```bash
 npm install --save node-rest-server
 ```
 
-From Github packages
+Install from GitHub Packages:
 
 ```bash
 npm install @nishant-labs/node-rest-server
@@ -41,21 +33,21 @@ npm install @nishant-labs/node-rest-server
 
 ## Importing
 
+### ES Modules (recommended)
+
 ```js
-import NodeRestServer from 'node-rest-server'; // ES6
-// or
-const NodeRestServer = require('node-rest-server'); // ES5
-// or
-import { NodeRestServer } from 'node-rest-server'; // If you like to use named export
-
-// Invoke it as function and pass configuration
-const serverInstance = NodeRestServer(routeConfig, serverConfig);
-
-serverInstance.addListener('<event name>', () => void); // Add event listener
-serverInstance.close(); // explicitly close server
+import NodeRestServer from 'node-rest-server';
+import { RouteConfiguration, ServerConfiguration } from 'node-rest-server';
 ```
 
-## Usage Example
+### CommonJS
+
+```js
+const NodeRestServer = require('node-rest-server');
+const { RouteConfiguration, ServerConfiguration } = require('node-rest-server');
+```
+
+## Quick Start
 
 ```js
 import NodeRestServer from 'node-rest-server';
@@ -64,56 +56,96 @@ const routeConfig = {
 	'/api1': {
 		method: 'GET',
 		status: 200,
-		header: { 'x-data': 'value' },
-		controller: () => 'Data',
+		headers: { 'x-data': 'value' },
+		controller: () => ({ payload: 'Data' }),
 	},
 };
 
-NodeRestServer(routeConfig);
+const serverConfig = {
+	port: 8080,
+};
+
+const server = NodeRestServer(routeConfig, serverConfig);
 ```
 
-## Sample
+## Server Events
 
-[example](https://github.com/nishant-labs/node-rest-server/tree/main/examples) directory provides a sample application explaining the use of this library.
+The returned server instance supports Node HTTP event listeners:
+
+- `listening`
+- `close`
+- `connection`
+- `error`
+- `request`
+- `clientError`
+
+Example:
+
+```js
+server.addListener('listening', () => console.log('Server started'));
+server.addListener('close', () => console.log('Server shutdown complete'));
+```
+
+## Shutdown
+
+The server exposes a `close` method that returns a `Promise<Error | undefined>`:
+
+```ts
+await server.close();
+await server.close(true);
+```
+
+- `close()` performs graceful shutdown and waits for active requests to finish
+- `close(true)` forces immediate shutdown and closes open connections
 
 ## Route Configuration
 
-A route configuration is an object with key(_route path_) value(_route options_) pair:-
+A route configuration maps a path to either a single route item or an array of route items for the same path.
 
-1. **Path**: Uri which will serve a resource in rest server
-2. **Route Options**: Options which define working of the path and also decide status and response payload.
+### Route item options
 
-### Route Options
+|     Name      |                                      Type                                       | Default |                 Description                  |
+| :-----------: | :-----------------------------------------------------------------------------: | :-----: | :------------------------------------------: |
+|   `method`    | `GET` \| `POST` \| `PUT` \| `DELETE` \| `PATCH` \| `HEAD` \| `OPTIONS` \| `ALL` |  `GET`  |          HTTP method for the route           |
+|   `status`    |                                    `number`                                     |  `200`  |          HTTP response status code           |
+|   `headers`   |                            `Record<string, string>`                             |    -    |       Response headers for this route        |
+| `middlewares` |                         `Array<ExpressMiddlewareFunc>`                          |    -    | Express-compatible middleware for this route |
+| `controller`  |                       `Function` \| `Object` \| `Promise`                       |    -    |  Controller response or controller function  |
 
-| Name                 | Type                     | Default     | Description                                                                                                                                                                                                      |
-| :------------------- | :----------------------- | :---------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| method               | `String`                 | `GET`       | Method defines the type of request controller will handle                                                                                                                                                        |
-| headers (_optional_) | `Record<String, String>` |             | Specify static headers to be passed in response                                                                                                                                                                  |
-| status (_optional_)  | `String`                 | `200`       | An appropriate HTTP response status code which server will give response for a request                                                                                                                           |
-| controller           | `function\|Object`       |             | This function/object will contain the business logic for the route path. For a function an object is passed which will contain request `url`, `body`, `params` and `header` and response of `filter` to be used. |
-| middlewares          | `Function`               | `undefined` | List of ExpressJS compliant middlewares                                                                                                                                                                          |
+### Controller signature
 
-### Controller method
+A controller receives:
 
-A controller can either return
+- `requestData`
+  - `url`
+  - `body`
+  - `pathParams`
+  - `queryParams`
+  - `headers`
+  - `method`
+  - `rawRequest` (original Express request object)
+  - `filter` (data returned from global filter)
+- `controllerOptions`
+  - `getDatabaseConnection`
 
-- an object with `status`, `headers` and `payload`;
+Controllers can return:
+
+- an object with `status`, `headers`, and `payload`
+- an object with `error`, `file`, or `html`
+- plain JSON-serializable data
+- a `Promise` resolving to any of the above
+
+Example:
 
 ```js
-{
-  status: 500, // should be a number
-	headers: { 'x-data': 'value' }, // optional header, should be a string record
-  payload: "Hello world" // user can send any valid json converted using JSON.stringify()
-}
+return {
+	status: 201,
+	headers: { 'x-created': 'true' },
+	payload: { message: 'Created' },
+};
 ```
 
-or
-
-- a response data object (valid as per `JSON.stringify()` json spec)
-
-- a `Promise` which then resolves to return data with above spec
-
-### Route config Example
+### Example route configuration
 
 ```js
 const routeConfig = {
@@ -121,82 +153,89 @@ const routeConfig = {
 		method: 'GET',
 		status: 200,
 		headers: { 'x-data': 'value' },
-		controller: () => 'Data',
+		controller: () => ({ payload: 'Data' }),
 	},
 	'/endpoint2': {
 		method: 'POST',
 		controller: async (requestData, { getDatabaseConnection }) => {
-			const dataFromDB = await getDatabaseConnection();
-			return { status: 200, payload: { data: 'Data', dataFromDB } };
+			const connection = await getDatabaseConnection?.(requestData);
+			return { status: 200, payload: { data: 'Data', connection } };
 		},
 	},
 	'/endpoint3': [
 		{
 			method: 'POST',
-			controller: async (requestData, { getDatabaseConnection }) => {
-				// requestData.method will be POST
-				const dataFromDB = await getDatabaseConnection();
-				return { status: 200, payload: { data: 'Data', dataFromDB } };
+			controller: async (requestData) => {
+				const { rawRequest } = requestData;
+				return { status: 200, payload: { data: 'Async data', path: rawRequest.path } };
 			},
 		},
 		{
 			method: 'GET',
-			controller: (requestData) => {
-				// requestData.method will be GET
-				return { status: 200, payload: { data: 'Async data' } };
-			},
+			controller: (requestData) => ({ status: 200, payload: { filter: requestData.filter } }),
 		},
 	],
-	'/async/endpoint': {
-		method: 'POST',
-		controller: (requestData) => {
-			// Some DB/api calls
-			return { status: 200, payload: { data: 'Async data' } };
-		},
-	},
 };
 ```
 
-## Server Configuration (_optional_)
+## Server Configuration
 
-This manages how the server will be configured
+|          Name           |              Type              |            Default            |                             Description                              |
+| :---------------------: | :----------------------------: | :---------------------------: | :------------------------------------------------------------------: |
+|       `basePath`        |            `string`            |               -               |                     Common prefix for all routes                     |
+|         `port`          |            `number`            |            `8000`             |                          Port to listen on                           |
+|         `delay`         |            `number`            |              `0`              |                      Delay response by seconds                       |
+|        `logger`         |           `boolean`            | `LoggerConfiguration`\|`true` | Enable logging or pass logger settings such as level and output file |
+| `getDatabaseConnection` |           `function`           |               -               |                Async helper available in controllers                 |
+|        `filter`         |           `function`           |               -               |               Global request filter, supports promises               |
+|         `cors`          |         `CorsOptions`          |               -               |              CORS configuration for the `cors` package               |
+|        `headers`        |    `Record<string, string>`    |          `function`           |        Global response headers or function returning headers         |
+|      `middlewares`      | `Array<ExpressMiddlewareFunc>` |               -               |                     App-level Express middleware                     |
+|         `https`         |     `https.ServerOptions`      |               -               |                Enable HTTPS server with Node options                 |
 
-| Name                  | Type               | Default     | Description                                                                                                                                                                                             |
-| :-------------------- | :----------------- | :---------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| basePath              | `String`           |             | Common prefix for all the routes                                                                                                                                                                        |
-| port                  | `Number`           | `8000`      | Port on which server will serve the content                                                                                                                                                             |
-| delay (sec)           | `Number`           | `0`         | Forcefully delay the response timing in seconds                                                                                                                                                         |
-| logger                | `Object\|Boolean`  | `true`      | Enable logging for application, a boolean value will enable/disable all logging features, an object can be passed with property `enable` to toggle the logging and `debug` to enable/disable debug logs |
-| getDatabaseConnection | `function`         |             | Provides a mechanism to get DB connection using globally available method passed (supports `Promise`) to controller in second parameter.                                                                |
-| filter                | `function`         |             | Enable application level filter and pass returned value(supports `Promise`) to controller.                                                                                                              |
-| cors                  | `Object`           | `undefined` | Config should be as per [cors](https://github.com/expressjs/cors) package                                                                                                                               |
-| headers               | `Object\|Function` | `undefined` | Any object with headers or a function which returns object with headers                                                                                                                                 |
-| middlewares           | `Function`         | `undefined` | List of ExpressJS compliant middlewares                                                                                                                                                                 |
-
-### Server config Example
+### Example server configuration
 
 ```js
 const serverConfig = {
-  basePath: '/base/api',
-  port: 8080,
-  delay: 2,
-  logger: {
-      enable: true,
-      debug: false,
-  },
-  getDatabaseConnection: async () => {
-		return Promise.resolve('db connection');
-	}
-  filter: (requestData) => {
-      return { data: 'calculate' };
-  },
-  cors: {
-    origin: '*'
-  },
-	headers: () => {
-		return {
-			'x-data': 'my header',
-		};
+	basePath: '/base/api',
+	port: 8080,
+	delay: 2,
+	logger: {
+		enable: true,
+		level: 'info',
+		file: './logs/server.log',
 	},
+	getDatabaseConnection: async (requestData) => {
+		return Promise.resolve('db connection');
+	},
+	filter: async (requestData) => {
+		return { user: 'test-user', requestTime: Date.now() };
+	},
+	cors: {
+		origin: '*',
+	},
+	headers: (requestData) => ({
+		'x-data': 'my header',
+		'x-request-method': requestData.method,
+	}),
+	middlewares: [
+		(req, res, next) => {
+			console.log('route middleware');
+			next();
+		},
+	],
 };
 ```
+
+## Advanced Response Types
+
+Controller results may include:
+
+- `payload`: sends JSON response
+- `error`: sends `{ error }` JSON response
+- `file`: sends a file using Express `sendFile`
+- `html`: sends raw HTML using Express `send`
+
+## Examples
+
+See the [`examples`](https://github.com/nishant-labs/node-rest-server/tree/main/examples) directory for working samples.
