@@ -19,9 +19,9 @@ const registerMethod = (app: Express, endpoint: string, endpointHandlerConfigIte
 		if (typeof routeFn === 'function') {
 			const callback = RouteProvider(endpointHandlerConfigItem, controllerOptions, serverConfig);
 			if (endpointHandlerConfigItem.middlewares?.length) {
-				(routeFn as (...args: unknown[]) => void)(uri, ...endpointHandlerConfigItem.middlewares, callback);
+				(routeFn as (...args: unknown[]) => void).call(app, uri, ...endpointHandlerConfigItem.middlewares, callback);
 			} else {
-				(routeFn as (...args: unknown[]) => void)(uri, callback);
+				(routeFn as (...args: unknown[]) => void).call(app, uri, callback);
 			}
 		}
 	}
