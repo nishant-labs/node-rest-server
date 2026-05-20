@@ -12,13 +12,13 @@ export const extractResponseData = (
 	const { status, headers, ...userData } = controllerResponseData;
 	return {
 		...userData,
-		status: status || routeConfig.status || 200,
+		status: status ?? routeConfig.status ?? 200,
 		headers: { ...serverConfigHeaders, ...routeConfig.headers, ...headers },
 	};
 };
 
 export const publishErrorResponse = (response: ExpressResponse, status: number, payload: string) => {
-	publishResponse(response, { status, payload, headers: {} });
+	publishResponse(response, { status, error: payload, headers: {} });
 };
 
 const publishResponse = (response: ExpressResponse, finalResponse: Partial<FinalResponse>) => {
@@ -32,12 +32,16 @@ const publishResponse = (response: ExpressResponse, finalResponse: Partial<Final
 	}
 
 	const hasPayload = 'payload' in finalResponse;
+	const hasError = 'error' in finalResponse;
 	const hasFile = 'file' in finalResponse;
 	const hasHtml = 'html' in finalResponse;
 
-	if (hasPayload && finalResponse.payload) {
+	if (hasPayload && finalResponse.payload !== undefined) {
 		logger.debug(`Response sent : ${JSON.stringify(finalResponse.payload)}`);
 		response.json(finalResponse.payload);
+	} else if (hasError && finalResponse.error !== undefined) {
+		logger.debug(`Error response sent : ${finalResponse.error}`);
+		response.json({ error: finalResponse.error });
 	} else if (hasFile && finalResponse.file) {
 		logger.debug(`Response sent : ${finalResponse.file}`);
 		response.sendFile(finalResponse.file);

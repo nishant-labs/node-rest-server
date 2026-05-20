@@ -15,14 +15,14 @@ const registerMethod = (app: Express, endpoint: string, endpointHandlerConfigIte
 		const method = String(endpointHandlerConfigItem.method);
 		logger.info(`Registering route path: ${method.toUpperCase()} ${uri}`);
 
-		if (endpointHandlerConfigItem.middlewares?.length) {
-			// @ts-expect-error unsafe call to support dynamic generator
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-			app[method.toLowerCase()](uri, ...endpointHandlerConfigItem.middlewares, RouteProvider(endpointHandlerConfigItem, controllerOptions, serverConfig));
-		} else {
-			// @ts-expect-error unsafe call to support dynamic generator
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-			app[method.toLowerCase()](uri, RouteProvider(endpointHandlerConfigItem, controllerOptions, serverConfig));
+		const routeFn = (app as unknown as Record<string, unknown>)[method.toLowerCase()];
+		if (typeof routeFn === 'function') {
+			const callback = RouteProvider(endpointHandlerConfigItem, controllerOptions, serverConfig);
+			if (endpointHandlerConfigItem.middlewares?.length) {
+				(routeFn as (...args: unknown[]) => void).call(app, uri, ...endpointHandlerConfigItem.middlewares, callback);
+			} else {
+				(routeFn as (...args: unknown[]) => void).call(app, uri, callback);
+			}
 		}
 	}
 };

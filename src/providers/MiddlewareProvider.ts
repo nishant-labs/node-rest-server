@@ -2,6 +2,7 @@ import { Express } from 'express';
 import { logger } from '../utils/Logger';
 import { getRequestData } from '../handlers/RequestHandler';
 import { ServerConfiguration } from '../types/config.types';
+import { ExpressRequest, ExpressResponse, ExpressNextFunction } from '../types/express.types';
 
 export const registerRequestLogger = (app: Express) => {
 	logger.debug('Registering request logger');
@@ -16,25 +17,30 @@ export const registerRequestLogger = (app: Express) => {
 
 export const registerFilters = (app: Express, serverConfig: ServerConfiguration) => {
 	logger.debug('Registering global filter');
-	app.use((request, response, next) => {
+	app.use((request: ExpressRequest, response: ExpressResponse, next: ExpressNextFunction) => {
 		const data = getRequestData(request);
 		if (typeof serverConfig.filter === 'function') {
 			logger.info('Executing filter...');
-			const filterData = serverConfig.filter(data, request, response);
-			if (filterData instanceof Promise) {
-				filterData
-					.then((filterDataResponse: unknown) => {
-						response.locals = filterDataResponse ?? {};
-						next();
-					})
-					.catch((error) => {
-						// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-						logger.error('Error occurred while applying filter:', error);
-						next();
-					});
+			try {
+				const filterData = serverConfig.filter(data, request, response);
+				if (filterData instanceof Promise) {
+					filterData
+						.then((filterDataResponse: unknown) => {
+							response.locals = filterDataResponse ?? {};
+							next();
+						})
+						.catch((error: unknown) => {
+							logger.error({ err: error as Error }, 'Error occurred while applying filter');
+							next(error as Error);
+						});
+					return;
+				}
+				response.locals = filterData ?? {};
+			} catch (error: unknown) {
+				logger.error({ err: error as Error }, 'Error occurred while applying filter');
+				next(error as Error);
 				return;
 			}
-			response.locals = filterData ?? {};
 		}
 		next();
 	});
@@ -43,8 +49,8 @@ export const registerFilters = (app: Express, serverConfig: ServerConfiguration)
 export const registerStatusEndpoint = (app: Express) => {
 	logger.debug('Registering /status endpoint to get routes information');
 	app.get('/status', (_request, response) => {
-		const { stack } = app._router as Record<string, Array<string>>;
-		response.send(stack);
+		const router = (app as unknown as { _router?: { stack?: Array<unknown> } })._router;
+		response.send(router?.stack ?? []);
 	});
 };
 

@@ -1,4 +1,5 @@
 import * as http from 'node:http';
+import { Socket } from 'node:net';
 import express, { Express } from 'express';
 import cors from 'cors';
 import { logger } from '../utils/Logger';
@@ -36,12 +37,31 @@ export const getServerReturnHandlers = (server?: http.Server): RestServer => ({
 			}
 
 			let isShutdownComplete = false;
+			const openConnections = new Set<http.ServerResponse>();
+
+			const onConnection = (socket: Socket) => {
+				socket.setKeepAlive(false);
+				if (forced) {
+					socket.destroy();
+				}
+			};
+
+			const onRequest = (_req: http.IncomingMessage, res: http.ServerResponse) => {
+				openConnections.add(res);
+				res.on('finish', () => {
+					openConnections.delete(res);
+					if (openConnections.size === 0) {
+						logger.debug('All pending requests completed');
+					}
+				});
+			};
 
 			const cleanup = () => {
 				if (isShutdownComplete) return;
 				isShutdownComplete = true;
 				clearTimeout(timeoutHandle);
-				server.removeAllListeners();
+				server.off('connection', onConnection);
+				server.off('request', onRequest);
 			};
 
 			const timeoutHandle: NodeJS.Timeout = setTimeout(() => {
@@ -49,44 +69,26 @@ export const getServerReturnHandlers = (server?: http.Server): RestServer => ({
 				reject(new Error(`Server shutdown timed out after ${SHUTDOWN_TIMEOUT}ms`));
 			}, SHUTDOWN_TIMEOUT);
 
-			// Handle uncaught errors during shutdown
 			const errorHandler = (error: Error) => {
+				if (isShutdownComplete) return;
 				cleanup();
 				reject(error);
 			};
 
 			try {
-				// Stop accepting new connections
-				server.unref();
-
-				// Force close if requested
+				const serverWithConnectionControl = server as unknown as {
+					closeIdleConnections?: () => void;
+					closeAllConnections?: () => void;
+				};
 				if (forced) {
 					logger.info('Forcing all connections to close...');
-					server.closeIdleConnections();
-					server.closeAllConnections();
+					serverWithConnectionControl.closeIdleConnections?.();
+					serverWithConnectionControl.closeAllConnections?.();
 				}
 
-				// Track existing connections for graceful shutdown
-				const openConnections = new Set<http.ServerResponse>();
+				server.on('connection', onConnection);
+				server.on('request', onRequest);
 
-				server.on('connection', (socket) => {
-					socket.setKeepAlive(false);
-					if (forced) {
-						socket.destroy();
-					}
-				});
-
-				server.on('request', (_req, res) => {
-					openConnections.add(res);
-					res.on('finish', () => {
-						openConnections.delete(res);
-						if (openConnections.size === 0) {
-							logger.debug('All pending requests completed');
-						}
-					});
-				});
-
-				// Begin shutdown
 				server.close((err) => {
 					if (err) {
 						errorHandler(err);

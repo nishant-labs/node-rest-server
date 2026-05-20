@@ -6,5 +6,5 @@
 		"moduleResolution": "bundler",
 		"allowSyntheticDefaultImports": true
 	},
-	"include": ["vitest.config.ts", "scripts/rollup/rollup.config.mjs"]
+	"include": ["vitest.config.ts", "vite.config.ts", "eslint.config.mjs", "test", "dev", "examples"]
 }

@@ -2,7 +2,7 @@ import { ServerConfiguration, ControllerOptions } from '../types/config.types';
 
 export const extractIfAvailable = (object: ServerConfiguration, attributes: keyof ControllerOptions | Array<keyof ControllerOptions>): ControllerOptions => {
 	if (typeof attributes === 'string' && object[attributes]) {
-		return { [attributes]: object[attributes] } as ControllerOptions;
+		return { [attributes]: object[attributes] };
 	}
 
 	if (Array.isArray(attributes)) {
@@ -15,7 +15,7 @@ export const extractIfAvailable = (object: ServerConfiguration, attributes: keyo
 		}, {});
 	}
 
-	return {} as ControllerOptions;
+	return {};
 };
 
 const stringifyReplacerCircularBreak = () => {
